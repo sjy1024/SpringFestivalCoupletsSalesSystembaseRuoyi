@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ClCartMapper">
+    
+    <resultMap type="ClCart" id="ClCartResult">
+        <result property="cartId"    column="cart_id"    />
+        <result property="deviceId"    column="device_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="itemSpec"    column="item_spec"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectClCartVo">
+        select cart_id, device_id, goods_id, quantity, item_spec, create_time, update_time from cl_cart
+    </sql>
+
+    <select id="selectClCartList" parameterType="ClCart" resultMap="ClCartResult">
+        <include refid="selectClCartVo"/>
+        <where>  
+            <if test="deviceId != null  and deviceId != ''"> and device_id = #{deviceId}</if>
+            <if test="goodsId != null "> and goods_id = #{goodsId}</if>
+            <if test="quantity != null "> and quantity = #{quantity}</if>
+        </where>
+    </select>
+    
+    <select id="selectClCartByCartId" parameterType="Long" resultMap="ClCartResult">
+        <include refid="selectClCartVo"/>
+        where cart_id = #{cartId}
+    </select>
+
+    <select id="selectCartByDeviceIdAndGoodsId" resultMap="ClCartResult">
+        <include refid="selectClCartVo"/>
+        where device_id = #{deviceId} and goods_id = #{goodsId}
+        and item_spec = #{itemSpec}
+    </select>
+
+    <select id="selectCartListWithGoods" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT 
+            c.cart_id as cartId,
+            c.device_id as deviceId,
+            c.goods_id as goodsId,
+            c.quantity,
+            c.item_spec as itemSpec,
+            c.create_time as createTime,
+            c.update_time as updateTime,
+            g.goods_name as goodsName,
+            g.goods_price as goodsPrice,
+            g.goods_type as goodsType,
+            g.cover_image as coverImage,
+            g.stock,
+            g.description
+        FROM cl_cart c
+        LEFT JOIN cl_goods g ON c.goods_id = g.goods_id
+        WHERE c.device_id = #{deviceId}
+        AND g.status = '0'
+        ORDER BY c.create_time DESC
+    </select>
+        
+    <insert id="insertClCart" parameterType="ClCart" useGeneratedKeys="true" keyProperty="cartId">
+        insert into cl_cart
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null and deviceId != ''">device_id,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="itemSpec != null">item_spec,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null and deviceId != ''">#{deviceId},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="itemSpec != null">#{itemSpec},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClCart" parameterType="ClCart">
+        update cl_cart
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceId != null and deviceId != ''">device_id = #{deviceId},</if>
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where cart_id = #{cartId}
+    </update>
+
+    <delete id="deleteClCartByCartId" parameterType="Long">
+        delete from cl_cart where cart_id = #{cartId}
+    </delete>
+
+    <delete id="deleteClCartByCartIds" parameterType="String">
+        delete from cl_cart where cart_id in 
+        <foreach item="cartId" collection="array" open="(" separator="," close=")">
+            #{cartId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteCartByDeviceId" parameterType="String">
+        delete from cl_cart where device_id = #{deviceId}
+    </delete>
+</mapper>

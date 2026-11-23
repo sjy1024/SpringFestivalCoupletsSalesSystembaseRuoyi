@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ClAssistantChatMapper">
+    
+    <resultMap type="ClAssistantChat" id="ClAssistantChatResult">
+        <result property="chatId"    column="chat_id"    />
+        <result property="sessionId"    column="session_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="role"    column="role"    />
+        <result property="content"    column="content"    />
+        <result property="questionType"    column="question_type"    />
+        <result property="isHelpful"    column="is_helpful"    />
+        <result property="responseTime"    column="response_time"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectClAssistantChatVo">
+        select chat_id, session_id, user_id, user_name, role, content, question_type, is_helpful, response_time, create_time from cl_assistant_chat
+    </sql>
+
+    <select id="selectClAssistantChatList" parameterType="ClAssistantChat" resultMap="ClAssistantChatResult">
+        <include refid="selectClAssistantChatVo"/>
+        <where>  
+            <if test="sessionId != null  and sessionId != ''"> and session_id = #{sessionId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="role != null  and role != ''"> and role = #{role}</if>
+            <if test="questionType != null  and questionType != ''"> and question_type = #{questionType}</if>
+            <if test="isHelpful != null  and isHelpful != ''"> and is_helpful = #{isHelpful}</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectClAssistantChatByChatId" parameterType="Long" resultMap="ClAssistantChatResult">
+        <include refid="selectClAssistantChatVo"/>
+        where chat_id = #{chatId}
+    </select>
+
+    <select id="selectChatsBySessionId" parameterType="String" resultMap="ClAssistantChatResult">
+        <include refid="selectClAssistantChatVo"/>
+        where session_id = #{sessionId}
+        order by create_time asc
+    </select>
+
+    <select id="selectRecentSessionsByUserId" resultType="String">
+        select distinct session_id 
+        from cl_assistant_chat
+        where user_id = #{userId}
+        order by create_time desc
+        limit #{limit}
+    </select>
+
+    <select id="selectRecentChatsByUserId" resultMap="ClAssistantChatResult">
+        <include refid="selectClAssistantChatVo"/>
+        where user_id = #{userId}
+        order by create_time desc
+        limit #{limit}
+    </select>
+        
+    <insert id="insertClAssistantChat" parameterType="ClAssistantChat" useGeneratedKeys="true" keyProperty="chatId">
+        insert into cl_assistant_chat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sessionId != null and sessionId != ''">session_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="role != null and role != ''">role,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="questionType != null">question_type,</if>
+            <if test="isHelpful != null">is_helpful,</if>
+            <if test="responseTime != null">response_time,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sessionId != null and sessionId != ''">#{sessionId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="role != null and role != ''">#{role},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="questionType != null">#{questionType},</if>
+            <if test="isHelpful != null">#{isHelpful},</if>
+            <if test="responseTime != null">#{responseTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClAssistantChat" parameterType="ClAssistantChat">
+        update cl_assistant_chat
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sessionId != null and sessionId != ''">session_id = #{sessionId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="role != null and role != ''">role = #{role},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="questionType != null">question_type = #{questionType},</if>
+            <if test="isHelpful != null">is_helpful = #{isHelpful},</if>
+            <if test="responseTime != null">response_time = #{responseTime},</if>
+        </trim>
+        where chat_id = #{chatId}
+    </update>
+
+    <delete id="deleteClAssistantChatByChatId" parameterType="Long">
+        delete from cl_assistant_chat where chat_id = #{chatId}
+    </delete>
+
+    <delete id="deleteClAssistantChatByChatIds" parameterType="String">
+        delete from cl_assistant_chat where chat_id in 
+        <foreach item="chatId" collection="array" open="(" separator="," close=")">
+            #{chatId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteChatsBySessionId" parameterType="String">
+        delete from cl_assistant_chat where session_id = #{sessionId}
+    </delete>
+
+    <delete id="deleteClAssistantChatBySessionId" parameterType="String">
+        delete from cl_assistant_chat where session_id = #{sessionId}
+    </delete>
+
+    <delete id="deleteAllChatsByUserId" parameterType="Long">
+        delete from cl_assistant_chat where user_id = #{userId}
+    </delete>
+</mapper>

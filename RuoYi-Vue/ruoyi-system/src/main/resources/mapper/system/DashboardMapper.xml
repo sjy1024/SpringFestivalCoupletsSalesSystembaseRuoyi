@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.DashboardMapper">
+
+    <!-- 获取今日订单数 -->
+    <select id="getTodayOrderCount" resultType="int">
+        SELECT COUNT(*) 
+        FROM cl_order 
+        WHERE DATE(create_time) = CURDATE()
+    </select>
+
+    <!-- 获取今日销售额 -->
+    <select id="getTodaySales" resultType="string">
+        SELECT IFNULL(SUM(total_amount), 0) 
+        FROM cl_order 
+        WHERE DATE(create_time) = CURDATE() 
+        AND status IN ('1', '2', '3')
+    </select>
+
+    <!-- 获取商品总数 -->
+    <select id="getTotalGoodsCount" resultType="int">
+        SELECT COUNT(*) 
+        FROM cl_goods 
+        WHERE status = '0'
+    </select>
+
+    <!-- 获取订单总数 -->
+    <select id="getTotalOrderCount" resultType="int">
+        SELECT COUNT(*)
+        FROM cl_order
+    </select>
+
+    <!-- 获取待处理订单数 -->
+    <select id="getPendingOrderCount" resultType="int">
+        SELECT COUNT(*)
+        FROM cl_order
+        WHERE status IN ('0', '1', '2')
+    </select>
+
+    <!-- 获取最近订单 -->
+    <select id="getRecentOrders" resultType="map">
+        SELECT 
+            order_id as id,
+            order_no as orderNo,
+            total_amount as amount,
+            total_amount as totalAmount,
+            status as statusCode,
+            CASE status
+                WHEN '0' THEN '待支付'
+                WHEN '1' THEN '已支付'
+                WHEN '2' THEN '制作中'
+                WHEN '3' THEN '已完成'
+                WHEN '4' THEN '已取消'
+                ELSE '未知'
+            END as status,
+            DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') as createTime
+        FROM cl_order 
+        ORDER BY create_time DESC 
+        LIMIT 10
+    </select>
+
+    <!-- 获取库存预警 -->
+    <select id="getStockAlerts" resultType="map">
+        SELECT 
+            goods_id as id,
+            goods_name as name,
+            stock
+        FROM cl_goods 
+        WHERE stock &lt; 10 
+        AND status = '0'
+        ORDER BY stock ASC 
+        LIMIT 10
+    </select>
+
+    <!-- 获取近7天销售数据 -->
+    <select id="getWeeklySales" resultType="map">
+        SELECT 
+            DATE(create_time) as date,
+            COUNT(*) as order_count,
+            IFNULL(SUM(total_amount), 0) as sales_amount
+        FROM cl_order 
+        WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+        AND status IN ('1', '2', '3')
+        GROUP BY DATE(create_time)
+        ORDER BY date
+    </select>
+
+    <!-- 获取订单状态分布 -->
+    <select id="getOrderStatusDistribution" resultType="map">
+        SELECT 
+            CASE status
+                WHEN '0' THEN '待支付'
+                WHEN '1' THEN '已支付'
+                WHEN '2' THEN '制作中'
+                WHEN '3' THEN '已完成'
+                WHEN '4' THEN '已取消'
+                ELSE '未知'
+            END as status_name,
+            COUNT(*) as count
+        FROM cl_order 
+        WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+        GROUP BY status
+    </select>
+
+    <!-- 获取热门商品排行 -->
+    <select id="getHotGoodsRanking" resultType="map">
+        SELECT 
+            g.goods_id as id,
+            g.goods_name as name,
+            IFNULL(SUM(oi.quantity), 0) as sales_count
+        FROM cl_goods g
+        LEFT JOIN cl_order_item oi ON g.goods_id = oi.goods_id
+        LEFT JOIN cl_order o ON oi.order_id = o.order_id
+        WHERE o.create_time >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+        AND o.status IN ('1', '2', '3')
+        GROUP BY g.goods_id, g.goods_name
+        ORDER BY sales_count DESC
+        LIMIT 10
+    </select>
+
+    <!-- 获取首页热门商品 -->
+    <select id="getHotGoodsForHome" resultType="map">
+        SELECT
+            g.goods_name as goodsName,
+            g.goods_price as goodsPrice,
+            g.stock,
+            g.status,
+            IFNULL(SUM(CASE WHEN o.status IN ('1', '2', '3') THEN oi.quantity ELSE 0 END), 0) as salesCount
+        FROM cl_goods g
+        LEFT JOIN cl_order_item oi ON g.goods_id = oi.goods_id
+        LEFT JOIN cl_order o ON oi.order_id = o.order_id
+        GROUP BY g.goods_id, g.goods_name, g.goods_price, g.stock, g.status
+        ORDER BY salesCount DESC, g.sort_order ASC
+        LIMIT 5
+    </select>
+
+    <!-- 获取定制订单统计 -->
+    <select id="getCustomOrderStats" resultType="map">
+        SELECT 
+            COUNT(*) as total_count,
+            SUM(CASE WHEN status = '0' THEN 1 ELSE 0 END) as pending_count,
+            SUM(CASE WHEN status = '1' THEN 1 ELSE 0 END) as processing_count,
+            SUM(CASE WHEN status = '2' THEN 1 ELSE 0 END) as completed_count
+        FROM cl_custom_order
+        WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+    </select>
+
+    <!-- 获取AI对话统计 -->
+    <select id="getAIChatStats" resultType="map">
+        SELECT 
+            COUNT(*) as total_chats,
+            COUNT(DISTINCT session_id) as unique_sessions,
+            AVG(response_time) as avg_response_time
+        FROM cl_assistant_chat
+        WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+    </select>
+
+</mapper>

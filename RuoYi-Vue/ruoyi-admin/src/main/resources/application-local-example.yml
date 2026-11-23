@@ -1,0 +1,46 @@
+# ============================================================
+# 本地私密配置示例
+#
+# 使用方法：复制本文件并重命名为 application-local.yml，
+# 填入自己的配置。application-local.yml 已被 .gitignore 排除，
+# 不会被提交到仓库。
+#
+# 可用配置项与代码对应关系：
+#   ruoyi.llm.provider        LLM 提供方：openai-compatible | ollama
+#   ruoyi.app-ai.use-llm      小程序端 AI 是否走大模型（false = 关键词模式）
+#   ruoyi.openaiApi.*         openai-compatible 提供方参数
+#   ruoyi.ollama.*            ollama 提供方参数
+# ============================================================
+
+ruoyi:
+  llm:
+    # 提供方：openai-compatible（DeepSeek / LM Studio 等兼容接口）或 ollama
+    provider: openai-compatible
+  app-ai:
+    # true：小程序 AI 对话/生成走大模型；false 或模型不可用时降级为关键词/本地模板
+    use-llm: true
+
+  # ---------- 方案一：DeepSeek 云端接口（OpenAI 兼容）----------
+  openaiApi:
+    baseUrl: https://api.deepseek.com/v1
+    apiKey: sk-替换为你的APIKey
+    model: deepseek-chat
+    # 单次回复最大 token 数（默认 1024）
+    maxTokens: 2048
+    # LM Studio 等本地服务可不填 key；model 留空会自动探测 /v1/models
+    prefer-non-stream: false
+
+  # ---------- 方案二：LM Studio 本地服务 ----------
+  # 启动 LM Studio → Local Server（默认端口 1234）后使用：
+  # openaiApi:
+  #   baseUrl: http://127.0.0.1:1234/v1
+  #   apiKey:            # 本机服务可不填
+  #   model:             # 留空自动探测已加载模型
+
+  # ---------- 方案三：本地 Ollama ----------
+  # 需 ollama pull 下载模型后使用，并把上面 provider 改为 ollama：
+  # ollama:
+  #   base-url: http://127.0.0.1:11434
+  #   model: gemma2:2b   # 名称与 ollama list 一致
+  #   num-ctx: 1024      # 上下文长度，过大易内存不足
+  #   num-gpu: -1        # -1 = 使用 Ollama 默认 GPU 策略

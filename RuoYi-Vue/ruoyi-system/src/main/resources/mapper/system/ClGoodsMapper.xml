@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ClGoodsMapper">
+    
+    <resultMap type="ClGoods" id="ClGoodsResult">
+        <result property="goodsId"    column="goods_id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsType"    column="goods_type"    />
+        <result property="goodsPrice"    column="goods_price"    />
+        <result property="stock"    column="stock"    />
+        <result property="coverImage"    column="cover_image"    />
+        <result property="images"    column="images"    />
+        <result property="description"    column="description"    />
+        <result property="specOptions"    column="spec_options"    />
+        <result property="rating"    column="rating"    />
+        <result property="status"    column="status"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectClGoodsVo">
+        select goods_id, goods_name, goods_type, goods_price, stock, cover_image, images, description, spec_options, rating, status, sort_order, create_by, create_time, update_by, update_time, remark from cl_goods
+    </sql>
+
+    <select id="selectClGoodsList" parameterType="ClGoods" resultMap="ClGoodsResult">
+        <include refid="selectClGoodsVo"/>
+        <where>  
+            <if test="goodsName != null  and goodsName != ''"> and goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="goodsType != null  and goodsType != ''"> and goods_type = #{goodsType}</if>
+            <if test="goodsPrice != null "> and goods_price = #{goodsPrice}</if>
+            <if test="stock != null "> and stock = #{stock}</if>
+            <if test="coverImage != null  and coverImage != ''"> and cover_image = #{coverImage}</if>
+            <if test="images != null  and images != ''"> and images = #{images}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="rating != null "> and rating = #{rating}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="sortOrder != null "> and sort_order = #{sortOrder}</if>
+        </where>
+    </select>
+    
+    <select id="selectClGoodsByGoodsId" parameterType="Long" resultMap="ClGoodsResult">
+        <include refid="selectClGoodsVo"/>
+        where goods_id = #{goodsId}
+    </select>
+
+    <insert id="insertClGoods" parameterType="ClGoods" useGeneratedKeys="true" keyProperty="goodsId">
+        insert into cl_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsName != null and goodsName != ''">goods_name,</if>
+            <if test="goodsType != null">goods_type,</if>
+            <if test="goodsPrice != null">goods_price,</if>
+            <if test="stock != null">stock,</if>
+            <if test="coverImage != null">cover_image,</if>
+            <if test="images != null">images,</if>
+            <if test="description != null">description,</if>
+            <if test="specOptions != null">spec_options,</if>
+            <if test="rating != null">rating,</if>
+            <if test="status != null">status,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsName != null and goodsName != ''">#{goodsName},</if>
+            <if test="goodsType != null">#{goodsType},</if>
+            <if test="goodsPrice != null">#{goodsPrice},</if>
+            <if test="stock != null">#{stock},</if>
+            <if test="coverImage != null">#{coverImage},</if>
+            <if test="images != null">#{images},</if>
+            <if test="description != null">#{description},</if>
+            <if test="specOptions != null">#{specOptions},</if>
+            <if test="rating != null">#{rating},</if>
+            <if test="status != null">#{status},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClGoods" parameterType="ClGoods">
+        update cl_goods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsName != null and goodsName != ''">goods_name = #{goodsName},</if>
+            <if test="goodsType != null">goods_type = #{goodsType},</if>
+            <if test="goodsPrice != null">goods_price = #{goodsPrice},</if>
+            <if test="stock != null">stock = #{stock},</if>
+            <if test="coverImage != null">cover_image = #{coverImage},</if>
+            <if test="images != null">images = #{images},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="goodsType != null and goodsType == '0'">spec_options = null,</if>
+            <if test="goodsType != null and goodsType != '0' and specOptions != null and specOptions != ''">spec_options = #{specOptions},</if>
+            <if test="rating != null">rating = #{rating},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where goods_id = #{goodsId}
+    </update>
+
+    <delete id="deleteClGoodsByGoodsId" parameterType="Long">
+        delete from cl_goods where goods_id = #{goodsId}
+    </delete>
+
+    <delete id="deleteClGoodsByGoodsIds" parameterType="String">
+        delete from cl_goods where goods_id in 
+        <foreach item="goodsId" collection="array" open="(" separator="," close=")">
+            #{goodsId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ClCustomOrderMapper">
+    
+    <resultMap type="ClCustomOrder" id="ClCustomOrderResult">
+        <result property="customId"    column="custom_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="baseGoodsId"    column="base_goods_id"    />
+        <result property="customContent"    column="custom_content"    />
+        <result property="customSpec"    column="custom_spec"    />
+        <result property="queueNo"    column="queue_no"    />
+        <result property="queuePosition"    column="queue_position"    />
+        <result property="estimatedTime"    column="estimated_time"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="orderNo"    column="order_no"    />
+    </resultMap>
+
+    <sql id="selectClCustomOrderVo">
+        select custom_id, order_id, base_goods_id, custom_content, custom_spec, queue_no, queue_position, estimated_time, status, create_time, update_time, remark from cl_custom_order
+    </sql>
+
+    <select id="selectClCustomOrderByCustomId" parameterType="Long" resultMap="ClCustomOrderResult">
+        select c.custom_id, c.order_id, c.base_goods_id, c.custom_content, c.custom_spec, c.queue_no,
+               c.queue_position, c.estimated_time, c.status, c.create_time, c.update_time, c.remark,
+               o.order_no
+        from cl_custom_order c
+        left join cl_order o on c.order_id = o.order_id
+        where c.custom_id = #{customId}
+    </select>
+
+    <select id="selectClCustomOrderByCustomIdAndDeviceId" resultMap="ClCustomOrderResult">
+        select c.custom_id, c.order_id, c.base_goods_id, c.custom_content, c.custom_spec, c.queue_no,
+               c.queue_position, c.estimated_time, c.status, c.create_time, c.update_time, c.remark
+        from cl_custom_order c
+        inner join cl_order o on c.order_id = o.order_id and o.device_id = #{deviceId}
+        where c.custom_id = #{customId}
+    </select>
+
+    <select id="selectClCustomOrderList" parameterType="ClCustomOrder" resultMap="ClCustomOrderResult">
+        select c.custom_id, c.order_id, c.base_goods_id, c.custom_content, c.custom_spec, c.queue_no,
+               c.queue_position, c.estimated_time, c.status, c.create_time, c.update_time, c.remark,
+               o.order_no
+        from cl_custom_order c
+        left join cl_order o on c.order_id = o.order_id
+        <where>
+            <if test="orderId != null "> and c.order_id = #{orderId}</if>
+            <if test="orderNo != null and orderNo != ''"> and o.order_no like concat('%', #{orderNo}, '%')</if>
+            <if test="baseGoodsId != null "> and c.base_goods_id = #{baseGoodsId}</if>
+            <if test="status != null  and status != ''"> and c.status = #{status}</if>
+            <if test="queueNo != null "> and c.queue_no = #{queueNo}</if>
+        </where>
+        order by c.create_time desc
+    </select>
+
+    <select id="selectClCustomOrderListByDeviceId" resultMap="ClCustomOrderResult">
+        select c.custom_id, c.order_id, c.base_goods_id, c.custom_content, c.custom_spec, c.queue_no,
+               c.queue_position, c.estimated_time, c.status, c.create_time, c.update_time, c.remark,
+               o.order_no
+        from cl_custom_order c
+        inner join cl_order o on c.order_id = o.order_id and o.device_id = #{deviceId}
+        order by c.create_time desc
+        limit 50
+    </select>
+
+    <insert id="insertClCustomOrder" parameterType="ClCustomOrder" useGeneratedKeys="true" keyProperty="customId">
+        insert into cl_custom_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="baseGoodsId != null">base_goods_id,</if>
+            <if test="customContent != null">custom_content,</if>
+            <if test="customSpec != null">custom_spec,</if>
+            <if test="queueNo != null">queue_no,</if>
+            <if test="queuePosition != null">queue_position,</if>
+            <if test="estimatedTime != null">estimated_time,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="baseGoodsId != null">#{baseGoodsId},</if>
+            <if test="customContent != null">#{customContent},</if>
+            <if test="customSpec != null">#{customSpec},</if>
+            <if test="queueNo != null">#{queueNo},</if>
+            <if test="queuePosition != null">#{queuePosition},</if>
+            <if test="estimatedTime != null">#{estimatedTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClCustomOrder" parameterType="ClCustomOrder">
+        update cl_custom_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="baseGoodsId != null">base_goods_id = #{baseGoodsId},</if>
+            <if test="customContent != null">custom_content = #{customContent},</if>
+            <if test="customSpec != null">custom_spec = #{customSpec},</if>
+            <if test="queueNo != null">queue_no = #{queueNo},</if>
+            <if test="queuePosition != null">queue_position = #{queuePosition},</if>
+            <if test="estimatedTime != null">estimated_time = #{estimatedTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where custom_id = #{customId}
+    </update>
+
+    <delete id="deleteClCustomOrderByCustomId" parameterType="Long">
+        delete from cl_custom_order where custom_id = #{customId}
+    </delete>
+
+    <delete id="deleteClCustomOrderByCustomIds" parameterType="String">
+        delete from cl_custom_order where custom_id in 
+        <foreach item="customId" collection="array" open="(" separator="," close=")">
+            #{customId}
+        </foreach>
+    </delete>
+
+    <select id="selectMaxQueueNoByStatus" parameterType="String" resultType="Long">
+        select COALESCE(MAX(queue_no), 0) from cl_custom_order where status = #{status}
+    </select>
+</mapper>

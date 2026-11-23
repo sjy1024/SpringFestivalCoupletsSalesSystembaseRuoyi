@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ClOrderItemMapper">
+    
+    <resultMap type="ClOrderItem" id="ClOrderItemResult">
+        <result property="itemId"    column="item_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsPrice"    column="goods_price"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="totalPrice"    column="total_price"    />
+        <result property="itemSpec"    column="item_spec"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectClOrderItemVo">
+        select item_id, order_id, goods_id, goods_name, goods_price, quantity, total_price, item_spec, create_time from cl_order_item
+    </sql>
+
+    <select id="selectClOrderItemList" parameterType="ClOrderItem" resultMap="ClOrderItemResult">
+        <include refid="selectClOrderItemVo"/>
+        <where>  
+            <if test="orderId != null"> and order_id = #{orderId}</if>
+            <if test="goodsId != null"> and goods_id = #{goodsId}</if>
+            <if test="goodsName != null  and goodsName != ''"> and goods_name like concat('%', #{goodsName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectClOrderItemByOrderId" parameterType="Long" resultMap="ClOrderItemResult">
+        <include refid="selectClOrderItemVo"/>
+        where order_id = #{orderId}
+    </select>
+
+    <insert id="insertClOrderItem" parameterType="ClOrderItem" useGeneratedKeys="true" keyProperty="itemId">
+        insert into cl_order_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="goodsName != null and goodsName != ''">goods_name,</if>
+            <if test="goodsPrice != null">goods_price,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="totalPrice != null">total_price,</if>
+            <if test="itemSpec != null">item_spec,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="goodsName != null and goodsName != ''">#{goodsName},</if>
+            <if test="goodsPrice != null">#{goodsPrice},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="totalPrice != null">#{totalPrice},</if>
+            <if test="itemSpec != null">#{itemSpec},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClOrderItem" parameterType="ClOrderItem">
+        update cl_order_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="goodsName != null and goodsName != ''">goods_name = #{goodsName},</if>
+            <if test="goodsPrice != null">goods_price = #{goodsPrice},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="totalPrice != null">total_price = #{totalPrice},</if>
+        </trim>
+        where item_id = #{itemId}
+    </update>
+
+    <delete id="deleteClOrderItemByItemId" parameterType="Long">
+        delete from cl_order_item where item_id = #{itemId}
+    </delete>
+
+    <delete id="deleteClOrderItemByOrderIds" parameterType="String">
+        delete from cl_order_item where order_id in 
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ClAppAiChatMapper">
+
+    <resultMap type="ClAppAiChat" id="ClAppAiChatResult">
+        <result property="chatId" column="chat_id"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="sessionId" column="session_id"/>
+        <result property="role" column="role"/>
+        <result property="content" column="content"/>
+        <result property="usedLlm" column="used_llm"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectVo">
+        select chat_id, device_id, session_id, role, content, used_llm, create_time from cl_app_ai_chat
+    </sql>
+
+    <insert id="insertClAppAiChat" parameterType="ClAppAiChat" useGeneratedKeys="true" keyProperty="chatId">
+        insert into cl_app_ai_chat (device_id, session_id, role, content, used_llm, create_time)
+        values (#{deviceId}, #{sessionId}, #{role}, #{content}, #{usedLlm}, #{createTime})
+    </insert>
+
+    <select id="selectByDeviceAndSession" resultMap="ClAppAiChatResult">
+        <include refid="selectVo"/>
+        where device_id = #{deviceId} and session_id = #{sessionId}
+        order by create_time asc, chat_id asc
+    </select>
+
+    <select id="selectRecentByDevice" resultMap="ClAppAiChatResult">
+        <include refid="selectVo"/>
+        where device_id = #{deviceId}
+        order by create_time desc, chat_id desc
+        limit #{limit}
+    </select>
+
+    <delete id="deleteByDeviceId">
+        delete from cl_app_ai_chat where device_id = #{deviceId}
+    </delete>
+
+    <delete id="deleteByDeviceAndSession">
+        delete from cl_app_ai_chat where device_id = #{deviceId} and session_id = #{sessionId}
+    </delete>
+</mapper>
