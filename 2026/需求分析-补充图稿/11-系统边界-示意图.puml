@@ -1,0 +1,30 @@
+@startuml 系统边界示意图
+skinparam rectangle {
+  BackgroundColor #FFFFFF
+  BorderColor #333333
+}
+
+title 图 系统边界示意图（模块：系统边界，3.6）
+
+rectangle "系统包含的功能（范围内）" as IN #E8F8E8 {
+  rectangle "商品展示与管理" as I1
+  rectangle "购物车管理" as I2
+  rectangle "订单管理" as I3
+  rectangle "支付功能（模拟支付）" as I4
+  rectangle "AI春联生成" as I5
+  rectangle "个性化定制" as I6
+  rectangle "用户评价" as I7
+  rectangle "数据统计" as I8
+}
+
+rectangle "系统不包含的功能（范围外）" as OUT #FFF0F0 {
+  rectangle "真实支付接口（微信支付/支付宝）" as O1
+  rectangle "真实物流跟踪接口" as O2
+  rectangle "短信通知服务" as O3
+  rectangle "微信公众号集成" as O4
+  rectangle "多语言支持" as O5
+}
+
+IN -[hidden]down- OUT
+
+@enduml

@@ -1,0 +1,31 @@
+@startuml 支付模块用例图
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor #FFF8F0
+  BorderColor #333333
+}
+skinparam actor {
+  BackgroundColor #E8FFE8
+  BorderColor #333333
+}
+
+title 图 支付模块用例图（模块：支付模块，PAY-001~PAY-003）
+left to right direction
+
+actor "消费者" as U
+actor "系统定时任务" as T
+
+rectangle "支付模块（模拟支付）" {
+  usecase "PAY-001\n模拟支付" as P1
+  usecase "PAY-002\n支付结果查询" as P2
+  usecase "PAY-003\n支付超时处理" as P3
+}
+
+U -- P1
+U -- P2
+T -- P3
+
+P2 ..> P1 : <<extend>>
+P3 ..> P1 : <<extend>>
+
+@enduml

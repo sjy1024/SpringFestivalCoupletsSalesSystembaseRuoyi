@@ -1,0 +1,200 @@
+page {
+  box-sizing: border-box;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 96rpx);
+}
+
+.t-tabs.t-tabs--top .t-tabs__scroll {
+  border-bottom: none !important;
+}
+
+.home-page-header {
+  background: linear-gradient(#fff, #f5f5f5);
+}
+
+.home-page-container {
+  background: #f5f5f5;
+}
+
+/* 首页 AI 智能定制横幅 */
+.home-ai-hero {
+  position: relative;
+  margin-bottom: 24rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  background: linear-gradient(135deg, #6b0f1a 0%, #9e1a2e 45%, #c41e3a 100%);
+  box-shadow: 0 12rpx 40rpx rgba(196, 30, 58, 0.35);
+}
+
+.home-ai-hero-glow {
+  position: absolute;
+  right: -40rpx;
+  top: -60rpx;
+  width: 220rpx;
+  height: 220rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 120, 0.45) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.home-ai-hero-main {
+  position: relative;
+  z-index: 1;
+  padding: 28rpx 28rpx 32rpx;
+}
+
+.home-ai-hero-badge {
+  display: inline-block;
+  font-size: 22rpx;
+  color: #ffe6a8;
+  letter-spacing: 2rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1rpx solid rgba(255, 230, 180, 0.35);
+  margin-bottom: 16rpx;
+}
+
+.home-ai-hero-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2rpx;
+  margin-bottom: 12rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+}
+
+.home-ai-hero-desc {
+  font-size: 24rpx;
+  color: rgba(255, 248, 240, 0.92);
+  line-height: 1.55;
+  margin-bottom: 28rpx;
+  max-width: 620rpx;
+}
+
+.home-ai-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.home-ai-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 20rpx 28rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.home-ai-btn-primary {
+  background: linear-gradient(180deg, #ffe8a8 0%, #ffc14d 100%);
+  color: #7a1a12;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.18);
+}
+
+.home-ai-btn-primary:active {
+  opacity: 0.92;
+}
+
+.home-ai-btn-ghost {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  border: 1rpx solid rgba(255, 255, 255, 0.35);
+}
+
+.home-ai-btn-ghost:active {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.home-page-container,
+.home-page-header {
+  display: block;
+  padding: 0 24rpx;
+}
+
+.home-page-header .t-search__input-container {
+  border-radius: 32rpx !important;
+  height: 64rpx !important;
+}
+
+.home-page-header .t-search__input {
+  font-size: 28rpx !important;
+  color: rgb(116, 116, 116) !important;
+}
+
+.home-page-header .swiper-wrap {
+  margin-top: 20rpx;
+}
+
+.home-page-header .t-image__swiper {
+  width: 100%;
+  height: 300rpx;
+  border-radius: 10rpx;
+}
+
+.home-page-container .t-tabs {
+  background: #f5f5f5 !important;
+}
+
+.home-page-container .t-tabs .t-tabs-nav {
+  background-color: transparent;
+  line-height: 80rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.home-page-container .t-tabs .t-tabs-scroll {
+  border: none !important;
+}
+
+/* 半个字 */
+.home-page-container .tab.order-nav .order-nav-item.scroll-width {
+  min-width: 165rpx;
+}
+.home-page-container .tab .order-nav-item.active {
+  color: #fa550f !important;
+}
+
+.home-page-container .tab .bottom-line {
+  border-radius: 4rpx;
+}
+
+.home-page-container .tab .order-nav-item.active .bottom-line {
+  background-color: #fa550f !important;
+}
+
+.home-page-container .tabs-external__item {
+  /* color: #666 !important; */
+  font-size: 28rpx;
+}
+
+.home-page-container .tabs-external__active {
+  color: #333333 !important;
+  font-size: 32rpx;
+}
+
+.home-page-container .tabs-external__track {
+  /* background-color: #fa4126 !important; */
+  height: 6rpx !important;
+  border-radius: 4rpx !important;
+  width: 48rpx !important;
+}
+
+.t-tabs.t-tabs--top .t-tabs__item,
+.t-tabs.t-tabs--bottom .t-tabs__item {
+  height: 86rpx !important;
+}
+
+.home-page-container .goods-list-container {
+  background: #f5f5f5 !important;
+  margin-top: 16rpx;
+}
+
+.home-page-tabs {
+  --td-tab-nav-bg-color: transparent;
+  --td-tab-border-color: transparent;
+  --td-tab-item-color: #666;
+  --td-tab-track-color: red;
+}

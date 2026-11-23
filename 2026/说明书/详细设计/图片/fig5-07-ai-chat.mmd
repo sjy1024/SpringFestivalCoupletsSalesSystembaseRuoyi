@@ -1,0 +1,34 @@
+%%{init: {'theme': 'neutral', 'themeVariables': { 'fontSize': '13px'}}}%%
+sequenceDiagram
+    autonumber
+    actor 用户 as U
+    participant 微信小程序 as MP
+    participant AppAIController as AC
+    participant AdminAssistantService as SVC
+    participant IClGoodsService as GS
+    participant OllamaService as OLL
+    participant Ollama as LLM
+    participant MySQL as DB
+
+    U->>MP: 输入问题
+    MP->>AC: POST /api/app/ai/chat
+    AC->>SVC: chat(deviceId, question)
+    SVC->>GS: 查询上架商品摘要
+    GS->>DB: SELECT cl_goods
+    DB-->>GS: 上架商品行
+    GS-->>SVC: 商品列表文本
+    SVC->>SVC: 组装 System Prompt
+    SVC->>OLL: HTTP 调用可设超时
+    OLL->>LLM: 推理
+    alt 成功
+        LLM-->>OLL: 回答文本
+        OLL-->>SVC: answer
+    else 超时或故障
+        OLL-->>SVC: 异常
+        SVC->>SVC: 降级固定话术<br/>推荐列表为空
+    end
+    SVC->>SVC: 模糊匹配商品名
+    SVC->>DB: INSERT cl_ai_chat_log
+    SVC-->>AC: answer + recommendedGoods
+    AC-->>MP: AjaxResult
+    MP-->>U: 气泡与商品卡片

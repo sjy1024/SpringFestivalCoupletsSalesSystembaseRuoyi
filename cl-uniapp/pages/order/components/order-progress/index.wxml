@@ -1,0 +1,41 @@
+<view class="order-progress">
+  <view class="progress-header">
+    <view class="current-status">
+      <t-icon name="{{steps[currentStep].icon}}" size="48rpx" color="#FF6B35" />
+      <view class="status-info">
+        <view class="status-title">{{steps[currentStep].title}}</view>
+        <view class="status-desc">{{steps[currentStep].desc}}</view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="progress-steps" wx:if="{{steps.length > 1}}">
+    <view 
+      class="step-item {{step.completed ? 'completed' : ''}} {{step.active ? 'active' : ''}}"
+      wx:for="{{steps}}" 
+      wx:key="status"
+      wx:for-item="step"
+    >
+      <view class="step-icon">
+        <t-icon 
+          wx:if="{{step.completed}}" 
+          name="check" 
+          size="24rpx" 
+          color="#fff" 
+        />
+        <t-icon 
+          wx:elif="{{step.active}}" 
+          name="{{step.icon}}" 
+          size="24rpx" 
+          color="#FF6B35" 
+        />
+        <view wx:else class="step-dot"></view>
+      </view>
+      <view class="step-content">
+        <view class="step-title">{{step.title}}</view>
+        <view class="step-time" wx:if="{{step.time}}">{{step.time}}</view>
+      </view>
+      <view class="step-line" wx:if="{{index < steps.length - 1}}"></view>
+    </view>
+  </view>
+</view>

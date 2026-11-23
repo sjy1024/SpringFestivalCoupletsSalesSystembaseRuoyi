@@ -1,0 +1,117 @@
+@startuml
+title 图4-2 春联售卖系统模块分层图
+
+' 不使用 linetype ortho：部分渲染器会失败。
+' 线条优化思路：表现层各 1 条线接入「端侧 Controller 分组」；Redis/Ollama 归入业务层、
+' MySQL 归入 Mapper 包，避免跨层长线与外围节点扇出。
+
+top to bottom direction
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+skinparam nodesep 40
+skinparam ranksep 52
+skinparam roundcorner 6
+skinparam ArrowThickness 1
+
+package "表现层" {
+  [微信小程序页面] as wx
+  [管理后台页面] as admin
+}
+
+wx -[hidden]right- admin
+
+package "控制层 Controller" {
+  component "小程序端 REST\n（/api/app）" as shell_app {
+    [AppGoodsController] as c_app_goods
+    [AppOrderController] as c_app_order
+    [AppCartController] as c_cart
+    [AppCustomController] as c_custom
+    [AppAIController] as c_ai
+  }
+  component "管理端 REST\n（/cl）" as shell_admin {
+    [ClGoodsController] as c_cl_goods
+    [ClOrderController] as c_cl_order
+  }
+}
+
+package "业务层 Service" {
+  [IClGoodsService] as s_goods
+  [IClOrderService] as s_order
+  collections "Redis" as cache
+  [IClCartService] as s_cart
+  [IClCustomOrderService] as s_custom
+  [AdminAssistantService] as s_ai
+  component "Ollama" as ollama
+}
+
+package "数据访问层 Mapper" {
+  [ClGoodsMapper] as m_goods
+  [ClOrderMapper] as m_order
+  [ClCartMapper] as m_cart
+  database "MySQL" as db
+}
+
+' ---------- 布局：两列（左小程序 / 右管理端），自上而下 ----------
+wx -[hidden]down- shell_app
+admin -[hidden]down- shell_admin
+shell_app -[hidden]right- shell_admin
+
+c_app_goods -[hidden]down- c_app_order
+c_app_order -[hidden]down- c_cart
+c_cart -[hidden]down- c_custom
+c_custom -[hidden]down- c_ai
+c_cl_goods -[hidden]down- c_cl_order
+
+shell_app -[hidden]down- s_goods
+shell_admin -[hidden]down- s_order
+
+c_app_goods -[hidden]down- s_goods
+c_cl_goods -[hidden]down- s_goods
+s_goods -[hidden]down- m_goods
+
+c_app_order -[hidden]down- s_order
+c_cl_order -[hidden]down- s_order
+s_order -[hidden]down- m_order
+
+c_cart -[hidden]down- s_cart
+s_cart -[hidden]down- m_cart
+
+c_custom -[hidden]down- s_custom
+s_custom -[hidden]down- m_order
+
+c_ai -[hidden]down- s_ai
+
+s_ai -[hidden]right- ollama
+
+' ---------- 语义连线 ----------
+wx --> shell_app : HTTP
+admin --> shell_admin : HTTP
+
+c_app_goods --> s_goods
+c_app_order --> s_order
+c_cart --> s_cart
+c_custom --> s_custom
+c_ai --> s_ai
+c_cl_goods --> s_goods
+c_cl_order --> s_order
+
+s_goods --> m_goods
+s_order --> m_order
+s_cart --> m_cart
+s_custom --> m_order
+s_ai --> m_goods
+
+m_goods --> db
+m_order --> db
+m_cart --> db
+
+s_goods --> cache
+s_order --> cache
+s_ai --> ollama
+
+note bottom of db
+  Redis / Ollama / MySQL 按「调用关系」画在对应层内，非物理拓扑（部署见 图4-1）。
+end note
+
+@enduml

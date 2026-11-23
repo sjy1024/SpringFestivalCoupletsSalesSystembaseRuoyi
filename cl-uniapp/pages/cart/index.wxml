@@ -1,0 +1,140 @@
+<!-- 购物车页面 -->
+<view class="container">
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <block wx:elif="{{!isEmpty}}">
+    <!-- 我的定制 -->
+    <view class="section custom-section" wx:if="{{customList.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">我的定制</text>
+        <text class="section-count">({{customList.length}})</text>
+      </view>
+      <view class="custom-list">
+        <view
+          wx:for="{{customList}}"
+          wx:key="customId"
+          class="custom-item"
+          bindtap="goToCustomOrder"
+          data-order-id="{{item.orderId}}"
+        >
+          <view class="custom-icon">联</view>
+          <view class="custom-body">
+            <view class="custom-top">
+              <text class="custom-title">{{item.summary}}</text>
+              <text class="custom-status {{item.statusClass}}">{{item.statusText}}</text>
+            </view>
+            <text class="custom-couplet" wx:if="{{item.shanglian}}">上联：{{item.shanglian}}</text>
+            <text class="custom-couplet" wx:if="{{item.xialian}}">下联：{{item.xialian}}</text>
+            <view class="custom-meta">
+              <text wx:if="{{item.priceText}}">¥{{item.priceText}}</text>
+              <text wx:if="{{item.queueText}}">{{item.queueText}}</text>
+              <text wx:if="{{item.etaText}}">{{item.etaText}}</text>
+            </view>
+          </view>
+          <text class="custom-arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 普通商品 -->
+    <view class="section" wx:if="{{cartList.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">商品清单</text>
+        <text class="section-count">({{cartList.length}})</text>
+      </view>
+      <view class="cart-list">
+        <view
+          wx:for="{{cartList}}"
+          wx:key="cartId"
+          class="cart-item"
+        >
+          <view class="select-box" bindtap="onSelectItem" data-cart-id="{{item.cartId}}">
+            <view class="checkbox {{item.isSelected ? 'checked' : ''}}">
+              <text wx:if="{{item.isSelected}}" class="check-icon">✓</text>
+            </view>
+          </view>
+
+          <view class="goods-info" bindtap="goToDetail" data-goods-id="{{item.goodsId}}">
+            <image src="{{item.coverImage}}" class="goods-image" mode="aspectFill"></image>
+            <view class="goods-detail">
+              <text class="goods-name">{{item.goodsName}}</text>
+              <text wx:if="{{item.specText}}" class="goods-spec">{{item.specText}}</text>
+              <text class="goods-price">¥{{item.goodsPrice}}</text>
+              <text class="goods-stock">库存：{{item.stock}}</text>
+            </view>
+          </view>
+
+          <view class="quantity-control">
+            <button
+              bindtap="decreaseQuantity"
+              data-cart-id="{{item.cartId}}"
+              disabled="{{item.quantity <= 1}}"
+              class="btn decrease"
+            >-</button>
+            <text class="quantity">{{item.quantity}}</text>
+            <button
+              bindtap="increaseQuantity"
+              data-cart-id="{{item.cartId}}"
+              disabled="{{item.quantity >= item.stock}}"
+              class="btn increase"
+            >+</button>
+          </view>
+
+          <view class="delete-btn" bindtap="removeItem" data-cart-id="{{item.cartId}}">
+            <text class="delete-icon">🗑️</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 仅有定制、无普通商品时的提示 -->
+    <view class="cart-goods-empty" wx:if="{{cartList.length === 0 && customList.length > 0}}">
+      <text class="cart-goods-empty__text">还没有加入普通商品</text>
+      <button class="go-shopping-btn mini" bindtap="goShopping">去首页逛逛</button>
+    </view>
+
+    <view wx:if="{{cartList.length > 0}}" class="footer-placeholder"></view>
+  </block>
+
+  <!-- 完全空状态 -->
+  <view wx:else class="empty-page">
+    <t-empty icon="cart" description="购物车空空如也">
+      <view slot="action" class="empty-action">
+        <button class="go-shopping-btn" bindtap="goShopping">去首页逛逛</button>
+        <button class="go-custom-btn" bindtap="goCustom">去定制春联</button>
+      </view>
+    </t-empty>
+  </view>
+</view>
+
+<!-- 底部操作栏 -->
+<view class="footer" wx:if="{{cartList.length > 0}}">
+  <view class="left-section">
+    <view class="select-all" bindtap="onSelectAll">
+      <view class="checkbox {{selectAll ? 'checked' : ''}}">
+        <text wx:if="{{selectAll}}" class="check-icon">✓</text>
+      </view>
+      <text class="select-all-text">全选</text>
+    </view>
+  </view>
+
+  <view class="right-section">
+    <view class="total-info">
+      <text class="total-text">合计：</text>
+      <text class="total-amount">¥{{totalAmount}}</text>
+    </view>
+    <button
+      class="checkout-btn {{totalQuantity > 0 ? 'active' : ''}}"
+      bindtap="checkout"
+      disabled="{{totalQuantity === 0}}"
+    >
+      结算({{totalQuantity}})
+    </button>
+  </view>
+</view>
+
+<t-toast id="t-toast" />
+<t-dialog id="t-dialog" />

@@ -1,0 +1,18 @@
+﻿%%{init: {'theme':'neutral'}}%%
+flowchart TB
+  subgraph APP[controller/app]
+    G[AppGoodsController\n/api/app/goods/*]
+    O[AppOrderController\n/api/app/order/*]
+    C[AppCartController\n/api/app/cart/*]
+    U[AppCustomController\n/api/custom/*]
+    AI[AppAIController\n/api/ai/*]
+    AD[AppAddressController\n/api/app/address/*]
+  end
+
+  subgraph CL[controller/cl]
+    CG[ClGoodsController\n/system/goods/*]
+    CO[ClOrderController\n/system/order/*]
+  end
+
+  X1[小程序端请求] --> APP
+  X2[管理端请求] --> CL

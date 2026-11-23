@@ -1,0 +1,18 @@
+%%{init: {'theme': 'neutral'}}%%
+sequenceDiagram
+    autonumber
+    actor 用户 as U
+    participant 微信小程序 as MP
+    participant AppCustomController as CC
+    participant 订单与定制服务 as SVC
+    participant MySQL as DB
+
+    U->>MP: 选择选项并填写内容与收货信息
+    MP->>CC: POST /api/app/custom/create
+    CC->>SVC: 创建定制单事务
+    SVC->>DB: INSERT cl_order + items
+    SVC->>DB: 计算排队并 INSERT cl_custom_order
+    DB-->>SVC: OK
+    SVC-->>CC: orderId, queueNo, queuePosition, estimatedTime
+    CC-->>MP: AjaxResult
+    MP-->>U: 排队卡片

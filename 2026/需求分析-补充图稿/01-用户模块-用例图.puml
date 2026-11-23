@@ -1,0 +1,36 @@
+@startuml 用户模块用例图
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor #FFF8F0
+  BorderColor #333333
+}
+skinparam actor {
+  BackgroundColor #E8FFE8
+  BorderColor #333333
+}
+
+title 图 用户模块用例图（模块：用户模块，USER-001~USER-005）
+left to right direction
+
+actor "消费者" as U
+
+rectangle "用户模块（小程序端）" {
+  usecase "USER-001\n用户登录" as UC1
+  usecase "USER-002\n用户信息获取" as UC2
+  usecase "USER-003\n收货地址管理" as UC3
+  usecase "USER-004\n用户订单查看" as UC4
+  usecase "USER-005\n用户偏好设置" as UC5
+}
+
+U -- UC1
+U -- UC2
+U -- UC3
+U -- UC4
+U -- UC5
+
+note bottom
+  如果你后续改为 deviceId 免登录模式，
+  可把 USER-001/002 的文案替换为「设备标识初始化/设备信息获取」。
+end note
+
+@enduml

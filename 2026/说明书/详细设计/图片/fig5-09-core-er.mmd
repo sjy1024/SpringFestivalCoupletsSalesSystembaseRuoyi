@@ -1,0 +1,33 @@
+%%{init: {'theme': 'neutral'}}%%
+erDiagram
+    cl_goods ||--o| cl_goods_extend : "扩展0..1"
+    cl_order ||--|{ cl_order_item : "包含"
+    cl_order_item }o--|| cl_goods : "引用"
+    cl_order |o--o| cl_custom_order : "定制0..1"
+
+    cl_goods {
+        bigint goods_id PK
+        string goods_name
+        string status
+    }
+    cl_goods_extend {
+        bigint extend_id PK
+        bigint goods_id FK
+    }
+    cl_order {
+        bigint order_id PK
+        string order_no
+        string status
+        string order_type
+    }
+    cl_order_item {
+        bigint item_id PK
+        bigint order_id FK
+        bigint goods_id FK
+    }
+    cl_custom_order {
+        bigint custom_id PK
+        bigint order_id FK
+        string status
+        int queue_position
+    }

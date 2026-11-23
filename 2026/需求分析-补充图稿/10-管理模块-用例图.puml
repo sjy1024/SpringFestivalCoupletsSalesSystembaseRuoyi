@@ -1,0 +1,35 @@
+@startuml 管理模块用例图
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor #FEFEFF
+  BorderColor #333333
+}
+skinparam actor {
+  BackgroundColor #E8F4FF
+  BorderColor #333333
+}
+
+title 图 管理模块用例图（模块：管理模块，ADMIN-001~ADMIN-006）
+left to right direction
+
+actor "系统管理员" as A
+
+rectangle "管理模块（后台）" {
+  usecase "ADMIN-001\n商品管理" as M1
+  usecase "ADMIN-002\n订单管理" as M2
+  usecase "ADMIN-003\n定制订单管理" as M3
+  usecase "ADMIN-004\n用户管理" as M4
+  usecase "ADMIN-005\n数据统计" as M5
+  usecase "ADMIN-006\n系统配置" as M6
+}
+
+A -- M1
+A -- M2
+A -- M3
+A -- M4
+A -- M5
+A -- M6
+
+M3 ..> M2 : <<include>>
+
+@enduml

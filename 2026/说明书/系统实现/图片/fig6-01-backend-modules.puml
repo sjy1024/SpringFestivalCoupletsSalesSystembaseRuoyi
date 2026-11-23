@@ -1,0 +1,41 @@
+@startuml
+title 图6-1 后端模块结构图
+
+top to bottom direction
+skinparam shadowing false
+skinparam componentStyle rectangle
+
+package "ruoyi-admin" as A {
+  [Spring Boot 启动] as A1
+  [Controller] as A2
+  [AdminAssistantService] as A3
+  [OllamaService] as A4
+}
+
+package "ruoyi-system" as S {
+  [Domain] as S1
+  [Service] as S2
+  [Mapper] as S3
+  [MyBatis XML] as S4
+}
+
+package "ruoyi-framework" as F {
+  [Spring Security] as F1
+  [JWT 与拦截器] as F2
+}
+
+package "ruoyi-common" as C {
+  [AjaxResult] as C1
+  [工具类与常量] as C2
+}
+
+A2 --> S2
+S2 --> S3
+S3 --> S4
+A2 --> C1
+F1 --> A2
+F2 --> A2
+A3 --> S2
+A3 --> A4
+
+@enduml

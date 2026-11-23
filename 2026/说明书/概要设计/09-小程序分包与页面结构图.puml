@@ -1,0 +1,44 @@
+@startuml
+title 图4-9 小程序分包与页面结构图
+
+skinparam shadowing false
+skinparam packageStyle folder
+
+package "主包（首屏与高频页）" as main #E8F4FF {
+  rectangle "pages/home\n首页" as p1
+  rectangle "pages/APP-custom\n定制入口" as p2
+  rectangle "pages/cart\n购物车" as p3
+  rectangle "pages/usercenter\n个人中心" as p4
+  rectangle "pages/APP-ai-chat\nAI 对话" as p5
+}
+
+package "分包：goods（商品）" as g #FFF8E8 {
+  rectangle "goods/list\n商品列表" as g1
+  rectangle "goods/details\n商品详情" as g2
+  rectangle "goods/search\n搜索" as g3
+  rectangle "goods/comments\n评价" as g4
+}
+
+package "分包：order（订单）" as o #F0FFF0 {
+  rectangle "order/confirm\n确认订单" as o1
+  rectangle "order/order-list\n订单列表" as o2
+  rectangle "order/order-detail\n订单详情" as o3
+  rectangle "order/pay-result\n支付结果" as o4
+  rectangle "order/apply-service\n售后申请" as o5
+}
+
+package "分包：user（用户）" as u #F8F0FF {
+  rectangle "user/address/list\n地址列表" as u1
+  rectangle "user/address/edit\n地址编辑" as u2
+}
+
+main -[hidden]right- g
+g -[hidden]right- o
+o -[hidden]right- u
+
+note bottom of main
+  与「pages.json」中 subPackages 配置一致；
+  分包可并行下载，减轻首包体积。
+end note
+
+@enduml

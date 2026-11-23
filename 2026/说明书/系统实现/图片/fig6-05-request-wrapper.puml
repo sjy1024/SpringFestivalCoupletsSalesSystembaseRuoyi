@@ -1,0 +1,28 @@
+@startuml
+title 图6-5 统一请求封装架构图
+
+left to right direction
+skinparam shadowing false
+skinparam componentStyle rectangle
+
+[request] as R
+[请求拦截器] as I1
+[wx.request] as H
+[响应拦截器] as I2
+[错误处理与提示] as E
+[error 拦截器] as ER
+database "缓存 Map" as C
+[性能监控] as M
+[返回 data] as D
+
+R --> I1
+I1 --> H
+H --> I2
+I2 --> D : code==200
+I2 --> E : code!=200
+H ..> ER : fail
+ER --> E
+R --> C
+R --> M
+
+@enduml

@@ -1,0 +1,22 @@
+%%{init: {'theme': 'neutral', 'themeVariables': { 'fontSize': '14px'}}}%%
+sequenceDiagram
+    autonumber
+    actor 用户 as U
+    participant 微信小程序 as MP
+    participant AppGoodsController as C
+    participant IClGoodsService as S
+    participant ClGoodsMapper as M
+    participant MySQL as DB
+
+    U->>MP: 浏览商品列表
+    MP->>C: GET /api/app/goods/list
+    Note over C: 构建查询对象<br/>强制 status=0
+    C->>S: selectClGoodsList(query)
+    S->>M: 动态 SQL
+    M->>DB: SELECT cl_goods
+    DB-->>M: 结果集
+    M-->>S: List
+    S-->>C: 商品列表
+    C-->>MP: AjaxResult
+    Note over MP: toAbsoluteUrl 处理封面
+    MP-->>U: 渲染列表

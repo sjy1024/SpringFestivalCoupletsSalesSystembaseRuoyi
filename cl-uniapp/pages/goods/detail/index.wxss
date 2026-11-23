@@ -1,0 +1,195 @@
+/* 商品详情页面样式 */
+
+.container {
+  background: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 120rpx;
+}
+
+.goods-images {
+  background: white;
+}
+
+.main-image {
+  width: 100%;
+  height: 600rpx;
+  display: block;
+}
+
+.goods-info {
+  background: white;
+  padding: 30rpx;
+  margin-top: 20rpx;
+}
+
+.goods-name {
+  font-size: 36rpx;
+  color: #333;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.goods-price-container {
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: baseline;
+  gap: 12rpx;
+}
+
+.price-hint {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.spec-section {
+  background: white;
+  padding: 30rpx;
+  margin-top: 20rpx;
+}
+
+.spec-group {
+  margin-bottom: 30rpx;
+}
+
+.spec-group:last-child {
+  margin-bottom: 0;
+}
+
+.spec-label {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.spec-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.spec-option {
+  min-width: 140rpx;
+  padding: 16rpx 24rpx;
+  border: 1px solid #ddd;
+  border-radius: 8rpx;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.spec-option.active {
+  border-color: #c33c2f;
+  background: #fff5f4;
+  color: #c33c2f;
+}
+
+.spec-name {
+  font-size: 26rpx;
+}
+
+.spec-price,
+.spec-extra {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 6rpx;
+}
+
+.spec-option.active .spec-price,
+.spec-option.active .spec-extra {
+  color: #c33c2f;
+}
+
+.goods-price {
+  font-size: 48rpx;
+  color: #c33c2f;
+  font-weight: bold;
+}
+
+.goods-stock {
+  font-size: 28rpx;
+  color: #999;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.goods-desc {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+  display: block;
+}
+
+.quantity-section {
+  background: white;
+  padding: 30rpx;
+  margin-top: 20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+}
+
+.btn {
+  width: 60rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  border: 1px solid #ddd;
+  background: white;
+  font-size: 32rpx;
+  padding: 0;
+}
+
+.quantity {
+  margin: 0 30rpx;
+  font-size: 32rpx;
+  min-width: 60rpx;
+  text-align: center;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 20rpx;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 20rpx; /* 按钮之间的间距 */
+}
+
+.cart-btn {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: #ff9500;
+  color: white;
+  border-radius: 10rpx;
+  font-size: 32rpx;
+  padding: 0;
+}
+
+.buy-btn {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: #c33c2f;
+  color: white;
+  border-radius: 10rpx;
+  font-size: 32rpx;
+  padding: 0;
+}

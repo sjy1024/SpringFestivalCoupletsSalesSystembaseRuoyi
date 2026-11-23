@@ -1,0 +1,42 @@
+@startuml
+title 图6-2 控制器路由分层图
+
+top to bottom direction
+skinparam shadowing false
+skinparam componentStyle rectangle
+
+rectangle "系统" as SYS {
+  package "controller/cl" as CL {
+    component "ClGoodsController\n/system/goods/*" as CG
+    component "ClOrderController\n/system/order/*" as CO
+
+    CG -[hidden]down-> CO
+  }
+
+  package "controller/app" as APP {
+    component "AppGoodsController\n/api/app/goods/*" as G
+    component "AppOrderController\n/api/app/order/*" as O
+    component "AppCartController\n/api/app/cart/*" as C
+    component "AppCustomController\n/api/custom/*" as U
+    component "AppAIController\n/api/ai/*" as AI
+    component "AppAddressController\n/api/app/address/*" as AD
+
+    G -[hidden]down-> O
+    O -[hidden]down-> C
+    C -[hidden]down-> U
+    U -[hidden]down-> AI
+    AI -[hidden]down-> AD
+  }
+
+  CL -[hidden]down-> APP
+}
+
+actor "小程序端请求" as X1
+actor "管理端请求" as X2
+
+X1 -[hidden]down-> X2
+
+X1 -right-> APP
+X2 -right-> CL
+
+@enduml

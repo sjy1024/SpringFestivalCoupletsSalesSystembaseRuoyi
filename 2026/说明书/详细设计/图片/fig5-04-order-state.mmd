@@ -1,0 +1,18 @@
+%%{init: {'theme': 'neutral'}}%%
+stateDiagram-v2
+    direction LR
+    [*] --> 待支付
+    待支付 --> 已支付: OD-02 模拟支付
+    待支付 --> 已取消: 用户取消
+    已支付 --> 制作中: OD-07 管理端接单
+    已支付 --> 已取消: 管理端取消
+    制作中 --> 已完成: OD-03 确认收货
+    制作中 --> 已取消: 管理端终止
+    已完成 --> [*]
+    已取消 --> [*]
+
+    note right of 已支付
+        cl_order.status 取值 0~4
+        与 cl_custom_order.status
+        含义不同
+    end note

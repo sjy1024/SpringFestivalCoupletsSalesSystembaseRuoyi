@@ -1,0 +1,24 @@
+%%{init: {'theme': 'neutral'}}%%
+sequenceDiagram
+    autonumber
+    actor 管理员 as A
+    participant 管理后台 as ADM
+    participant ClGoodsController as C
+    participant IClGoodsService as S
+    participant Mapper as M
+    participant MySQL as DB
+
+    A->>ADM: 填写表单提交
+    ADM->>C: POST /cl/goods
+    C->>C: 参数校验
+    C->>S: insertClGoods
+    S->>M: insert cl_goods
+    M->>DB: INSERT
+    DB-->>M: goods_id
+    alt goodsType 为定制
+        S->>M: insert cl_goods_extend
+        M->>DB: INSERT
+    end
+    S-->>C: 结果
+    C-->>ADM: AjaxResult
+    Note over S,DB: 主表与扩展表同事务提交

@@ -1,0 +1,34 @@
+﻿%%{init: {'theme':'neutral'}}%%
+flowchart TB
+  subgraph A[ruoyi-admin]
+    A1[Spring Boot 启动]
+    A2[Controller]
+    A3[AdminAssistantService]
+    A4[OllamaService]
+  end
+
+  subgraph S[ruoyi-system]
+    S1[Domain]
+    S2[Service]
+    S3[Mapper]
+    S4[MyBatis XML]
+  end
+
+  subgraph F[ruoyi-framework]
+    F1[Spring Security]
+    F2[JWT 与拦截器]
+  end
+
+  subgraph C[ruoyi-common]
+    C1[AjaxResult]
+    C2[工具类与常量]
+  end
+
+  A2 --> S2
+  S2 --> S3
+  S3 --> S4
+  A2 --> C1
+  F1 --> A2
+  F2 --> A2
+  A3 --> S2
+  A3 --> A4

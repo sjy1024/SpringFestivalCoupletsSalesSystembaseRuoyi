@@ -1,0 +1,43 @@
+@startuml 订单模块用例图
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor #FFF8F0
+  BorderColor #333333
+}
+skinparam actor {
+  BackgroundColor #E8FFE8
+  BorderColor #333333
+}
+
+title 图 订单模块用例图（模块：订单模块，ORDER-001~ORDER-008）
+left to right direction
+
+actor "消费者" as U
+
+rectangle "订单模块" {
+  usecase "ORDER-001\n创建订单" as O1
+  usecase "ORDER-002\n订单支付" as O2
+  usecase "ORDER-003\n订单列表" as O3
+  usecase "ORDER-004\n订单详情" as O4
+  usecase "ORDER-005\n取消订单" as O5
+  usecase "ORDER-006\n确认收货" as O6
+  usecase "ORDER-007\n订单状态跟踪" as O7
+  usecase "ORDER-008\n申请售后" as O8
+}
+
+U -- O1
+U -- O2
+U -- O3
+U -- O4
+U -- O5
+U -- O6
+U -- O7
+U -- O8
+
+O2 ..> O1 : <<include>>
+O4 ..> O3 : <<extend>>
+O7 ..> O4 : <<include>>
+O5 ..> O4 : <<extend>>
+O6 ..> O4 : <<extend>>
+
+@enduml

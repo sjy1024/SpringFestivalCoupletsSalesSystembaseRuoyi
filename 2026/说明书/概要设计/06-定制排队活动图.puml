@@ -1,0 +1,26 @@
+@startuml
+title 图4-7 定制服务模块排队流程活动图
+
+start
+:用户提交定制内容;
+:创建 cl_order 订单记录;
+:创建 cl_custom_order 记录;
+:生成 queue_no;
+:计算 queue_position;
+:预估 estimated_time;
+
+if (管理员接单?) then (是)
+  :状态=制作中;
+  :更新队列位置;
+  if (制作完成?) then (是)
+    :状态=已完成;
+  else (否)
+    :保持制作中;
+  endif
+else (否)
+  :状态=待接单;
+endif
+
+stop
+
+@enduml

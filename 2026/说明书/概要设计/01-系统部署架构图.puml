@@ -1,0 +1,27 @@
+@startuml
+title 图4-1 春联售卖系统部署架构图
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+node "客户端层" as client {
+  component "微信小程序\n(消费者)" as miniapp
+  component "Vue2 管理后台\n(管理员/客服)" as adminui
+}
+
+node "应用服务层" as app {
+  component "Spring Boot 应用\n(RESTful API)" as backend
+}
+
+database "MySQL\n(业务数据持久化)" as mysql
+collections "Redis\n(Token/热点缓存)" as redis
+component "Ollama\n(AI对话服务)" as ollama
+
+miniapp --> backend : HTTPS\n/api/app/*
+adminui --> backend : HTTPS\n/cl/* /system/*\nJWT Token
+
+backend --> mysql : MyBatis/JDBC
+backend --> redis : 缓存读写
+backend --> ollama : AI调用
+
+@enduml

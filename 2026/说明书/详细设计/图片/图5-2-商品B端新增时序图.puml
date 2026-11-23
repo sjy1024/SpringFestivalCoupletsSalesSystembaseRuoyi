@@ -1,0 +1,40 @@
+@startuml
+title 图5-2 商品管理模块 B 端商品新增时序图
+
+skinparam shadowing false
+
+actor 管理员 as A
+participant "管理后台" as ADM
+participant "ClGoodsController" as C
+participant "IClGoodsService" as S
+participant "ClGoodsMapper" as G
+participant "ClGoodsExtendMapper" as E
+database "MySQL" as DB
+
+A -> ADM : 填写商品表单并提交
+ADM -> C : POST /cl/goods
+C -> C : 参数校验\n(名称/价格/库存)
+C -> S : insertClGoods(goods)
+S -> G : insertClGoods
+G -> DB : INSERT cl_goods
+DB --> G : goods_id
+G --> S : 主键
+
+alt goodsType = "1" 定制商品
+  S -> E : insertClGoodsExtend(extend)
+  E -> DB : INSERT cl_goods_extend
+  DB --> E : OK
+  E --> S : OK
+end
+
+S --> C : 成功/失败
+C --> ADM : AjaxResult
+ADM --> A : 提示并刷新列表
+
+note over S, DB
+  主表与扩展表写入
+  在同一事务中提交，
+  任一步失败则回滚。
+end note
+
+@enduml

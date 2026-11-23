@@ -1,0 +1,27 @@
+@startuml
+title 图6-3 订单创建时序图
+
+skinparam shadowing false
+autonumber
+
+actor 用户 as U
+participant 小程序 as MP
+participant AppOrderController as AC
+participant IClGoodsService as GS
+participant IClOrderService as OS
+database MySQL as DB
+
+U -> MP : 提交订单
+MP -> AC : POST /api/app/order/create
+AC -> GS : 查询商品与库存
+GS -> DB : SELECT cl_goods
+DB --> GS : 商品数据
+GS --> AC : 校验结果
+AC -> OS : 生成订单号并写订单
+OS -> DB : INSERT cl_order
+OS -> DB : INSERT cl_order_item
+AC -> GS : 扣减库存
+GS -> DB : UPDATE cl_goods.stock
+AC --> MP : orderId/orderNo/totalAmount
+
+@enduml

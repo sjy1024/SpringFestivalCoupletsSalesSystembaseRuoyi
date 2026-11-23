@@ -1,0 +1,38 @@
+@startuml 购物车模块用例图
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor #FFF8F0
+  BorderColor #333333
+}
+skinparam actor {
+  BackgroundColor #E8FFE8
+  BorderColor #333333
+}
+
+title 图 购物车模块用例图（模块：购物车模块，CART-001~CART-007）
+left to right direction
+
+actor "消费者" as U
+
+rectangle "购物车模块" {
+  usecase "CART-001\n添加商品" as C1
+  usecase "CART-002\n删除商品" as C2
+  usecase "CART-003\n修改数量" as C3
+  usecase "CART-004\n查看购物车" as C4
+  usecase "CART-005\n清空购物车" as C5
+  usecase "CART-006\n选择结算" as C6
+  usecase "CART-007\n价格计算" as C7
+}
+
+U -- C1
+U -- C2
+U -- C3
+U -- C4
+U -- C5
+U -- C6
+
+C4 ..> C7 : <<include>>
+C6 ..> C4 : <<include>>
+C1 ..> C4 : <<extend>>
+
+@enduml

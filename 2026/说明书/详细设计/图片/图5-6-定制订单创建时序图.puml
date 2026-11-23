@@ -1,0 +1,33 @@
+@startuml
+title 图5-6 定制服务模块定制订单创建时序图（C 端）
+
+skinparam shadowing false
+
+actor 用户 as U
+participant "微信小程序" as MP
+participant "AppCustomController" as CC
+participant "IClOrderService" as OS
+participant "IClCustomOrderService" as CS
+database "MySQL" as DB
+
+U -> MP : 选择材质/尺寸等\n填写定制文字与收货信息
+MP -> CC : POST /api/app/custom/create\n(custom JSON + 收货信息)
+CC -> OS : 创建订单主记录与明细\n(orderType=1)
+OS -> DB : INSERT cl_order, cl_order_item
+CC -> CS : 计算排队并生成 queue_no
+CS -> DB : SELECT COUNT 排队中定制单
+DB --> CS
+CS -> DB : INSERT cl_custom_order
+DB --> CS
+CS --> CC : queueNo, queuePosition, estimatedTime
+CC --> MP : AjaxResult(data)
+MP --> U : 展示排队卡片
+
+note over CC, DB
+  设计约束：订单主数据与
+  cl_custom_order 在同一事务提交，
+  与「订单模块」创建路径二选一或
+  并存时需在实现层避免重复写库。
+end note
+
+@enduml

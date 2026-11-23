@@ -1,0 +1,121 @@
+<!-- AI对话页面 -->
+<view class="ai-chat-page">
+  <view class="ai-status-bar">
+    <view class="status-pill {{llmOnline ? 'on' : 'off'}}">
+      <text>{{llmOnline ? '大模型在线' : '关键词模式'}}</text>
+    </view>
+    <view class="status-actions">
+      <button class="mini-btn" size="mini" bindtap="refreshAiHealth">检测</button>
+      <button class="mini-btn history-btn" size="mini" bindtap="syncHistoryFromServer">历史记录</button>
+      <button class="mini-btn" size="mini" bindtap="newConversation">新对话</button>
+      <button class="mini-btn danger" size="mini" bindtap="clearServerAndLocal">清云端</button>
+    </view>
+  </view>
+
+  <scroll-view
+    class="chat-scroll"
+    scroll-y
+    scroll-with-animation
+    scroll-into-view="{{scrollIntoView}}"
+  >
+    <view class="chat-inner">
+      <view wx:for="{{messages}}" wx:key="index" class="msg-row">
+        <view wx:if="{{item.type === 'system'}}" class="system-msg">
+          <text>{{item.content}}</text>
+        </view>
+
+        <view wx:elif="{{item.type === 'ai'}}" class="msg-row ai-row">
+          <view class="avatar ai-avatar">AI</view>
+          <view class="bubble ai-bubble">
+            <rich-text wx:if="{{item.contentHtml}}" class="bubble-rich-text" nodes="{{item.contentHtml}}"></rich-text>
+            <text wx:else class="bubble-text" selectable>{{item.content}}</text>
+            <view class="bubble-meta">
+              <text class="bubble-time">{{item.time}}</text>
+              <text wx:if="{{item.usedLlm}}" class="llm-tag">大模型</text>
+            </view>
+            <view wx:if="{{item.canApplyCustom}}" class="bubble-actions">
+              <text class="apply-chip" bindtap="applyCoupletFromMessage" data-index="{{index}}">填入定制</text>
+            </view>
+          </view>
+        </view>
+
+        <view wx:elif="{{item.type === 'user'}}" class="msg-row user-row">
+          <view class="bubble user-bubble">
+            <text class="bubble-text" selectable>{{item.content}}</text>
+            <view class="bubble-meta">
+              <text class="bubble-time">{{item.time}}</text>
+            </view>
+          </view>
+          <view class="avatar user-avatar">我</view>
+        </view>
+      </view>
+
+      <view wx:if="{{loading}}" class="typing-hint">
+        <text>AI 正在思考…</text>
+      </view>
+
+      <view id="ai-bottom-anchor" class="bottom-anchor"></view>
+    </view>
+  </scroll-view>
+
+  <view class="ai-to-custom-bar">
+    <button class="ai-fill-custom-btn" bindtap="applyLastAiCoupletToCustom">填入定制页</button>
+    <text class="ai-fill-custom-hint">将最近一条可识别的春联带入「定制」Tab</text>
+  </view>
+
+  <view class="recommend-strip">
+    <view class="strip-title">一键生成（点主题即生成春联）</view>
+    <scroll-view scroll-x class="strip-scroll">
+      <view class="strip-inner">
+        <view
+          wx:for="{{recommendTopics}}"
+          wx:key="*this"
+          class="chip topic-chip"
+          bindtap="selectTopic"
+          data-topic="{{item}}"
+        >{{item}}</view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view wx:if="{{recommendCouplets.length}}" class="recommend-strip classic-strip">
+    <view class="strip-title">经典推荐（可直接填入定制）</view>
+    <scroll-view scroll-x class="strip-scroll">
+      <view class="strip-inner">
+        <view
+          wx:for="{{recommendCouplets}}"
+          wx:key="id"
+          class="chip classic-chip"
+          bindtap="applyClassicCouplet"
+          data-index="{{index}}"
+        >{{item.title}}</view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="input-area">
+    <view class="input-row">
+      <input
+        class="message-input"
+        placeholder="咨询定制 / 对话生成春联…"
+        maxlength="500"
+        value="{{inputMessage}}"
+        confirm-type="send"
+        bindconfirm="sendMessage"
+        bindinput="inputMessage"
+      />
+      <button class="send-btn" bindtap="sendMessage" disabled="{{loading}}">{{loading ? '…' : '发送'}}</button>
+    </view>
+    <scroll-view scroll-x class="quick-scroll">
+      <view class="quick-inner">
+        <view
+          wx:for="{{quickReplies}}"
+          wx:key="*this"
+          class="chip ghost"
+          bindtap="selectQuickReply"
+          data-reply="{{item}}"
+        >{{item}}</view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

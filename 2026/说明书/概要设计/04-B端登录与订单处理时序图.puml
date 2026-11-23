@@ -1,0 +1,27 @@
+@startuml
+title 图4-4 管理后台登录与订单处理模块时序图
+
+actor 管理员 as Admin
+participant "Vue2 管理后台" as Console
+participant "SysLoginController\n/若依鉴权" as Login
+participant "ClOrderController" as OC
+participant "IClOrderService" as OS
+database "MySQL" as DB
+collections "Redis" as Redis
+
+Admin -> Console : 输入账号密码
+Console -> Login : POST /login
+Login -> DB : 校验账号密码
+Login -> Redis : 写入会话/Token
+Login --> Console : 返回 JWT Token
+
+Admin -> Console : 查询/修改订单状态
+Console -> OC : GET/PUT /cl/order/*\nAuthorization: Bearer Token
+OC -> Redis : 校验 Token
+OC -> OS : updateStatus / list
+OS -> DB : 读写 cl_order
+OS --> OC : 业务结果
+OC --> Console : 统一响应
+Console --> Admin : 刷新订单列表
+
+@enduml

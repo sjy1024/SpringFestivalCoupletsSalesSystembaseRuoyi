@@ -1,0 +1,20 @@
+﻿%%{init: {'theme':'neutral'}}%%
+flowchart TB
+  APPJSON[app.json] --> MAIN[主包 pages]
+  APPJSON --> SUB[分包 subpackages]
+
+  subgraph MAIN[主包]
+    H[pages/home/home]
+    CART[pages/cart/index]
+    UC[pages/usercenter/index]
+    CC[pages/APP-custom/index]
+    CHAT[pages/APP-ai-chat/index]
+  end
+
+  subgraph SUB[分包]
+    G[pages/goods/*]
+    O[pages/order/*]
+    U[pages/user/*]
+    CO[pages/coupon/*]
+    P[pages/promotion/*]
+  end

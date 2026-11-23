@@ -1,0 +1,28 @@
+@startuml
+title 图5-1 商品管理模块 C 端商品列表查询时序图
+
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor 用户 as U
+participant "微信小程序" as MP
+participant "AppGoodsController" as C
+participant "IClGoodsService" as S
+participant "ClGoodsMapper" as M
+database "MySQL" as DB
+
+U -> MP : 浏览商品列表
+MP -> C : GET /api/app/goods/list\n(goodsName?, goodsType?)
+C -> C : 构建 ClGoods 查询对象\n强制 status="0"
+C -> S : selectClGoodsList(query)
+S -> M : 动态 SQL 查询
+M -> DB : SELECT cl_goods ...
+DB --> M : 结果集
+M --> S : List<ClGoods>
+S --> C : 列表数据
+C -> C : 封装 AjaxResult
+C --> MP : { code, data, msg }
+MP -> MP : request 解析\ntoAbsoluteUrl(封面)
+MP --> U : 渲染列表
+
+@enduml

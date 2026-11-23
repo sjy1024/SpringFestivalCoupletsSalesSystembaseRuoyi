@@ -1,0 +1,29 @@
+@startuml
+title 图4-3 订单管理模块小程序端下单交互时序图
+
+actor 用户 as User
+participant "微信小程序" as MiniApp
+participant "AppOrderController" as AC
+participant "IClOrderService" as OS
+participant "ClOrderMapper" as OM
+database "MySQL" as DB
+collections "Redis" as Redis
+
+User -> MiniApp : 选择商品并提交订单
+MiniApp -> AC : POST /api/app/order/create\n携带 device_id
+AC -> OS : createOrder(dto)
+OS -> Redis : 读取商品缓存/校验库存
+OS -> OM : insertOrder / insertItems
+OM -> DB : 写入 cl_order、cl_order_item
+OS -> DB : 更新库存
+OS --> AC : 返回 order_no
+AC --> MiniApp : {code:200, data}
+MiniApp -> AC : POST /api/app/order/mockPay
+AC -> OS : mockPay(orderId)
+OS -> OM : updateStatus(已支付)
+OM -> DB : 更新 cl_order.status
+OS --> AC : 支付结果
+AC --> MiniApp : 统一响应
+MiniApp --> User : 展示下单成功
+
+@enduml

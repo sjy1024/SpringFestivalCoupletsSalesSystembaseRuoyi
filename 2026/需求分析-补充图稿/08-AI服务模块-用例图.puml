@@ -1,0 +1,35 @@
+@startuml AI服务模块用例图
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor #F0F8FF
+  BorderColor #333333
+}
+skinparam actor {
+  BackgroundColor #E8FFE8
+  BorderColor #333333
+}
+
+title 图 AI服务模块用例图（模块：AI服务模块，AI-001~AI-005）
+left to right direction
+
+actor "消费者" as U
+
+rectangle "AI服务模块" {
+  usecase "AI-001\nAI对话" as A1
+  usecase "AI-002\n春联推荐" as A2
+  usecase "AI-003\n春联生成" as A3
+  usecase "AI-004\n主题推荐" as A4
+  usecase "AI-005\n聊天历史" as A5
+}
+
+U -- A1
+U -- A2
+U -- A3
+U -- A4
+U -- A5
+
+A2 ..> A1 : <<extend>>
+A3 ..> A1 : <<extend>>
+A5 ..> A1 : <<extend>>
+
+@enduml

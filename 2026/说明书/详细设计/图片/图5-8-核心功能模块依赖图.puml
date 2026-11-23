@@ -1,0 +1,60 @@
+@startuml
+title 图5-8 核心功能模块依赖关系图
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam linetype ortho
+skinparam defaultFontSize 15
+skinparam ArrowFontSize 12
+top to bottom direction
+skinparam ranksep 70
+skinparam nodesep 55
+
+package "表现层" {
+  [小程序端控制器\n/api/app/* 等] as APP
+  [管理端控制器\n/cl/*] as CL
+  APP -[hidden]right-> CL
+}
+
+package "业务层" {
+  [商品服务] as GS
+  [订单服务] as OS
+  [定制服务] as CS
+  [AI 助手服务] as AI
+  GS -[hidden]down-> OS
+  OS -[hidden]down-> CS
+  CS -[hidden]down-> AI
+}
+
+package "数据与外部" {
+  database "MySQL\n业务表" as DB
+  [Ollama 适配] as OLL
+  DB -[hidden]right-> OLL
+}
+
+APP -[hidden]down-> OS
+CL -[hidden]down-> CS
+AI -[hidden]down-> OLL
+
+APP --> GS : 商品查询
+APP --> OS : 下单
+APP --> CS : 定制
+APP --> AI : 对话
+
+CL --> GS : 商品维护
+CL --> OS : 订单管理
+CL --> CS : 定制管理
+
+OS --> GS : 校验库存
+OS --> CS : 写定制单
+CS ..> OS : 依赖 order_id
+
+AI --> GS : 读取上架商品
+AI --> DB : 对话日志
+AI --> OLL : LLM 调用
+
+GS --> DB
+OS --> DB
+CS --> DB
+
+@enduml

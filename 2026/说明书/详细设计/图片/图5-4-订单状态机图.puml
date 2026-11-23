@@ -1,0 +1,41 @@
+@startuml
+title 图5-4 订单主表 cl_order 状态转换图（订单状态机）
+
+skinparam shadowing false
+skinparam roundcorner 10
+skinparam ArrowThickness 1.2
+skinparam ArrowColor #34495e
+skinparam defaultFontColor #1a1a1a
+skinparam state {
+  BackgroundColor #eaf2f8
+  BorderColor #2874a6
+  FontColor #1a1a1a
+}
+
+state "待支付 (0)" as s0
+state "已支付 (1)" as s1
+state "制作中 (2)" as s2
+state "已完成 (3)" as s3 #d5f5e3
+state "已取消 (4)" as s4 #fadbd8
+
+[*] --> s0
+
+s0 --> s1 : 支付成功\n（含模拟支付 OD-02）
+s0 --> s4 : 用户取消
+
+s1 --> s2 : 管理端接单\n（OD-07 等）
+s1 --> s4 : 管理端取消
+
+s2 --> s3 : 用户确认收货\n（OD-03）
+s2 --> s4 : 管理端终止
+
+s3 --> [*]
+s4 --> [*]
+
+note right of s1
+  与定制单 cl_custom_order.status
+  含义不同：后者描述
+  车间排队与制作进度。
+end note
+
+@enduml

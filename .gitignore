@@ -1,0 +1,60 @@
+# ===== Java / Maven =====
+target/
+*.class
+*.war
+.mvn/wrapper/maven-wrapper.jar
+.factorypath
+.classpath
+.project
+.settings/
+
+# JVM 崩溃与运行日志
+hs_err_pid*.log
+replay_pid*.log
+logs/
+*.log
+
+# ===== Node / 前端 =====
+node_modules/
+dist/
+unpackage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# ===== 微信小程序 =====
+# 个人本地配置（开发者工具私有配置，不提交）
+project.private.config.json
+# 构建产物，克隆后执行「构建 npm」重新生成；如希望他人免构建可直接打开，删除下一行
+miniprogram_npm/
+
+# ===== IDE / 编辑器 =====
+.idea/
+*.iml
+.vscode/
+.kiro/
+.trae/
+.history/
+
+# ===== 操作系统 =====
+.DS_Store
+Thumbs.db
+Desktop.ini
+# Word 打开时的临时锁文件（如 ~$需求文档.doc）
+~$*
+
+# ===== 敏感配置（提交前替换为示例文件，见 README）=====
+# 含模型 API Key，不入库；请提供 application-local-example.yml 供他人参考
+RuoYi-Vue/ruoyi-admin/src/main/resources/application-local.yml
+
+# ===== 运行期上传目录（如不需要演示图片，可取消注释）=====
+# avatar/
+# upload/
+
+# ===== 个人文档（公开仓库建议排除，按需取消注释）=====
+# 需求分析/
+# 项目/
+# 2026/
+# 其他/

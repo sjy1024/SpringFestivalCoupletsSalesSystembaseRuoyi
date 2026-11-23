@@ -1,0 +1,42 @@
+@startuml 商品模块用例图
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor #FFF8F0
+  BorderColor #333333
+}
+skinparam actor {
+  BackgroundColor #E8FFE8
+  BorderColor #333333
+}
+
+title 图 商品模块用例图（模块：商品模块，GOODS-001~GOODS-006）
+left to right direction
+
+actor "消费者" as U
+
+rectangle "商品模块（小程序端）" {
+  usecase "GOODS-001\n商品列表展示" as G1
+  usecase "GOODS-002\n商品详情查看" as G2
+  usecase "GOODS-003\n商品分类浏览" as G3
+  usecase "GOODS-004\n商品搜索" as G4
+  usecase "GOODS-005\n商品推荐" as G5
+  usecase "GOODS-006\n商品评价查看" as G6
+}
+
+U -- G1
+U -- G2
+U -- G3
+U -- G4
+U -- G5
+U -- G6
+
+G3 ..> G1 : <<include>>
+G4 ..> G1 : <<include>>
+G2 ..> G6 : <<extend>>
+
+note right
+  管理端商品增删改与上下架能力
+  建议放在管理模块用例图中体现。
+end note
+
+@enduml

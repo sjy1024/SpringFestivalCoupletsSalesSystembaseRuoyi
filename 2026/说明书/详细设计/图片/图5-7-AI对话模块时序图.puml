@@ -1,0 +1,42 @@
+@startuml
+title 图5-7 AI 对话模块处理时序图（数据注入式推荐）
+
+skinparam shadowing false
+
+actor 用户 as U
+participant "微信小程序" as MP
+participant "AppAIController" as AC
+participant "AdminAssistantService" as SVC
+participant "IClGoodsService" as GS
+database "MySQL" as DB
+participant "OllamaService" as OLL
+participant "Ollama\n(本地 LLM)" as LLM
+
+U -> MP : 输入问题
+MP -> AC : POST /api/app/ai/chat\n(deviceId, question)
+AC -> SVC : chat(request)
+
+SVC -> GS : 查询上架商品摘要
+GS -> DB : SELECT cl_goods WHERE status=0
+DB --> GS
+GS --> SVC : 商品列表文本
+
+SVC -> SVC : 组装 System Prompt\n(角色 + 商品摘要 + 推荐规则)
+
+SVC -> OLL : HTTP POST /api/generate\n(超时建议可配置，如 60s)
+OLL -> LLM : 推理请求
+alt 调用成功
+  LLM --> OLL : 回答文本
+  OLL --> SVC : answer
+else 超时或不可用
+  OLL --> SVC : 异常
+  SVC -> SVC : 降级：固定提示语\nrecommendedGoods 为空
+end
+
+SVC -> SVC : 解析回答，模糊匹配商品名
+SVC -> DB : INSERT cl_ai_chat_log
+SVC --> AC : answer + recommendedGoods
+AC --> MP : AjaxResult
+MP --> U : 气泡 + 商品卡片
+
+@enduml

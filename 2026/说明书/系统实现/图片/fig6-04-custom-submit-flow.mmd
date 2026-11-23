@@ -1,0 +1,9 @@
+﻿%%{init: {'theme':'neutral'}}%%
+flowchart TB
+  A[提交定制方案\nPOST /api/custom/submit] --> B[参数校验]
+  B --> C[组装 ClCustomOrder]
+  C --> D[生成 queueNo]
+  D --> E[计算 queuePosition]
+  E --> F[计算 estimatedTime]
+  F --> G[写入 cl_custom_order]
+  G --> H[返回 customId 与排队信息]

@@ -1,0 +1,45 @@
+@startuml
+title 图4-8 春联售卖系统业务功能模块图
+
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam defaultTextAlignment center
+
+package "C 端：微信小程序" as C #E8F4FF {
+  rectangle "商品与内容\n浏览/搜索/详情/评价" as M1
+  rectangle "购物车与结算" as M2
+  rectangle "订单与售后\n下单/支付/物流状态" as M3
+  rectangle "春联定制\n选项/排队/进度" as M4
+  rectangle "AI 助手\n对话/推荐商品" as M5
+}
+
+package "B 端：管理后台" as B #FFF4E8 {
+  rectangle "商品与库存管理" as A1
+  rectangle "订单与定制单处理" as A2
+  rectangle "数据统计与运维" as A3
+}
+
+package "后端统一服务（Spring Boot）" as BE #F0F0F0 {
+  rectangle "REST API\n鉴权与路由" as API
+  rectangle "业务逻辑\n商品/订单/购物车/\n定制/AI" as SVC
+  rectangle "数据与缓存\nMyBatis / Redis" as DAO
+}
+
+M1 -down-> API
+M2 -down-> API
+M3 -down-> API
+M4 -down-> API
+M5 -down-> API
+
+A1 -down-> API
+A2 -down-> API
+A3 -down-> API
+
+API -down-> SVC
+SVC -down-> DAO
+
+note bottom of DAO
+  与图4-2对照：本图强调业务功能域，图4-2强调技术分层。
+end note
+
+@enduml

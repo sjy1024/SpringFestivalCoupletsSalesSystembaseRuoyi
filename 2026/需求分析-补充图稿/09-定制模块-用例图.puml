@@ -1,0 +1,38 @@
+@startuml 定制模块用例图
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor #FFF8F0
+  BorderColor #333333
+}
+skinparam actor {
+  BackgroundColor #E8FFE8
+  BorderColor #333333
+}
+
+title 图 定制模块用例图（模块：定制模块，CUSTOM-001~CUSTOM-006）
+left to right direction
+
+actor "消费者" as U
+
+rectangle "定制模块" {
+  usecase "CUSTOM-001\n定制选项展示" as K1
+  usecase "CUSTOM-002\n价格计算" as K2
+  usecase "CUSTOM-003\n定制内容输入" as K3
+  usecase "CUSTOM-004\n定制方案提交" as K4
+  usecase "CUSTOM-005\n排队查询" as K5
+  usecase "CUSTOM-006\n制作进度跟踪" as K6
+}
+
+U -- K1
+U -- K2
+U -- K3
+U -- K4
+U -- K5
+U -- K6
+
+K1 ..> K2 : <<include>>
+K4 ..> K1 : <<include>>
+K5 ..> K4 : <<extend>>
+K6 ..> K5 : <<extend>>
+
+@enduml

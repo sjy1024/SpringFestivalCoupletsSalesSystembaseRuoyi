@@ -1,0 +1,42 @@
+<!-- 商品列表页面 -->
+<view class="container">
+  <!-- 搜索框 -->
+  <view class="search-bar">
+    <input 
+      value="{{searchKeyword}}" 
+      placeholder="搜索商品"
+      bindinput="onSearchInput"
+      bindconfirm="searchGoods"
+      class="search-input"
+    />
+    <button bindtap="searchGoods" class="search-btn">搜索</button>
+  </view>
+
+  <!-- 商品列表 -->
+  <view class="goods-list">
+    <view 
+      wx:for="{{goods}}" 
+      wx:key="goodsId"
+      class="goods-item"
+      bindtap="goDetail"
+      data-goods-id="{{item.goodsId}}"
+    >
+      <image src="{{item.coverImage}}" class="goods-image" mode="aspectFill"></image>
+      <view class="goods-info">
+        <text class="goods-name">{{item.goodsName}}</text>
+        <text class="goods-price">¥{{item.goodsPrice}}</text>
+        <text class="goods-stock">库存：{{item.stock}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{goods.length === 0 && !loading}}" class="empty">
+    <text>暂无商品</text>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+</view>

@@ -1,0 +1,22 @@
+﻿%%{init: {'theme':'neutral'}}%%
+sequenceDiagram
+  autonumber
+  actor U as 用户
+  participant MP as 小程序
+  participant AC as AppOrderController
+  participant GS as IClGoodsService
+  participant OS as IClOrderService
+  participant DB as MySQL
+
+  U->>MP: 提交订单
+  MP->>AC: POST /api/app/order/create
+  AC->>GS: 查询商品与库存
+  GS->>DB: SELECT cl_goods
+  DB-->>GS: 商品数据
+  GS-->>AC: 校验结果
+  AC->>OS: 生成订单号并写订单
+  OS->>DB: INSERT cl_order
+  OS->>DB: INSERT cl_order_item
+  AC->>GS: 扣减库存
+  GS->>DB: UPDATE cl_goods.stock
+  AC-->>MP: orderId/orderNo/totalAmount

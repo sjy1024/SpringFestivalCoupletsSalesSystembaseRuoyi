@@ -1,0 +1,20 @@
+%%{init: {'theme': 'neutral'}}%%
+flowchart TB
+    subgraph 提交定制
+        A[用户提交定制] --> B[开启事务]
+        B --> C[写 cl_order orderType=1]
+        C --> D[写 cl_order_item]
+        D --> E[统计排队中定制单数]
+        E --> F[计算 queue_position 与 estimated_time]
+        F --> G[生成 queue_no 写 cl_custom_order]
+        G --> H[提交事务]
+        H --> I[返回排队信息]
+    end
+
+    subgraph 完成一单后更新队列
+        J[管理员将定制单置为已完成 status=2] --> K[开启事务]
+        K --> L[查询 position 更大的待处理单]
+        L --> M[position 减 1]
+        M --> N[重算 estimated_time]
+        N --> O[提交事务]
+    end

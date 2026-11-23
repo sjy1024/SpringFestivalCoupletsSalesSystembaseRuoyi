@@ -1,0 +1,32 @@
+%%{init: {'theme': 'neutral', 'themeVariables': { 'fontSize': '13px'}}}%%
+sequenceDiagram
+    autonumber
+    actor 用户 as U
+    participant 微信小程序 as MP
+    participant AppOrderController as AC
+    participant IClOrderService as OS
+    participant IClGoodsService as GS
+    participant MySQL as DB
+
+    U->>MP: 提交订单
+    MP->>AC: POST /api/app/order/create
+    AC->>AC: 按 type 路由 single/multi
+    AC->>GS: 校验上架与库存
+    GS->>DB: 读 cl_goods
+    DB-->>GS: 商品行
+    GS-->>AC: 校验结果
+    AC->>OS: 生成单号、汇总金额、写库
+    OS->>DB: 事务 INSERT cl_order, cl_order_item
+    opt 定制 orderType=1
+        OS->>DB: INSERT cl_custom_order 排队信息
+    end
+    DB-->>OS: commit ok
+    OS-->>AC: orderId
+    AC-->>MP: AjaxResult
+    MP-->>U: 订单详情
+
+    U->>MP: 模拟支付
+    MP->>AC: POST /api/app/order/mockPay
+    AC->>OS: 状态 0 转 1
+    OS->>DB: UPDATE cl_order
+    AC-->>MP: 成功

@@ -1,0 +1,34 @@
+%%{init: {'theme': 'neutral'}}%%
+flowchart TB
+    subgraph PL[表现层]
+        APP[小程序控制器 /api/app 等]
+        CL[管理端 /cl]
+    end
+
+    subgraph BL[业务层]
+        GS[商品服务]
+        OS[订单服务]
+        CS[定制服务]
+        AI[AI 助手服务]
+    end
+
+    subgraph EXT[数据与外部]
+        DB[(MySQL)]
+        OLL[Ollama 适配]
+    end
+
+    APP --> GS
+    APP --> OS
+    APP --> CS
+    APP --> AI
+    CL --> GS
+    CL --> OS
+    CL --> CS
+    OS --> GS
+    OS -->|定制依赖订单主键| CS
+    AI --> GS
+    AI --> DB
+    AI --> OLL
+    GS --> DB
+    OS --> DB
+    CS --> DB

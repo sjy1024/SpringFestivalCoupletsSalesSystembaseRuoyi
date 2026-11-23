@@ -1,0 +1,12 @@
+﻿%%{init: {'theme':'neutral'}}%%
+flowchart LR
+  R[request] --> I1[请求拦截器]
+  I1 --> H[wx.request]
+  H --> I2[响应拦截器]
+  I2 --> P{code==200}
+  P -- yes --> D[返回 data]
+  P -- no --> E[错误处理与提示]
+  H -. fail .-> ER[error 拦截器]
+  ER --> E
+  R --> C[(缓存 Map)]
+  R --> M[性能监控]

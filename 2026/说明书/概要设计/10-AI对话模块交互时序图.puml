@@ -1,0 +1,26 @@
+@startuml
+title 图4-10 AI对话模块交互时序图
+
+actor 用户 as User
+participant "微信小程序" as MiniApp
+participant "AppAIController" as AC
+participant "AdminAssistantService" as SVC
+participant "IClGoodsService" as Goods
+database "MySQL" as DB
+participant "Ollama\n(LLM)" as LLM
+
+User -> MiniApp : 输入问题/春联需求
+MiniApp -> AC : POST /api/app/ai/chat\ndevice_id + question
+AC -> SVC : chat(request)
+SVC -> Goods : getRecommendedGoods(...)
+Goods -> DB : 检索商品/热门
+Goods --> SVC : 候选商品列表
+SVC -> LLM : HTTP 调用生成回答
+LLM --> SVC : 模型输出文本
+SVC -> DB : 写入 cl_ai_chat_log\n(question, answer, recommended_goods)
+SVC --> AC : ChatResultVO
+AC --> MiniApp : {code:200, data}
+MiniApp -> MiniApp : getChatHistory（可选）
+MiniApp --> User : 展示回复与推荐商品
+
+@enduml

@@ -1,0 +1,42 @@
+@startuml
+title 图5-3 订单管理模块 C 端创建订单与模拟支付时序图
+
+skinparam shadowing false
+
+actor 用户 as U
+participant "微信小程序" as MP
+participant "AppOrderController" as AC
+participant "IClOrderService" as OS
+participant "IClGoodsService" as GS
+participant "ClOrderMapper" as OM
+database "MySQL" as DB
+
+U -> MP : 提交订单
+MP -> AC : POST /api/app/order/create
+AC -> AC : 按 type 路由\nsingle / multi
+AC -> GS : 校验商品上架与库存
+GS -> DB : 查询 cl_goods
+DB --> GS
+GS --> AC : 校验结果
+AC -> OS : 生成订单号、汇总金额
+OS -> OM : insertClOrder\ninsertClOrderItem
+OM -> DB : 事务写入\ncl_order, cl_order_item
+opt 定制订单 orderType=1
+  OS -> DB : 写入 cl_custom_order\n排队信息
+end
+DB --> OM : OK
+OM --> OS : orderId
+OS --> AC : 结果
+AC --> MP : { code, data: orderId }
+MP --> U : 跳转订单详情
+
+U -> MP : 模拟支付
+MP -> AC : POST /api/app/order/mockPay
+AC -> OS : 更新状态 0→1
+OS -> DB : UPDATE cl_order
+DB --> OS
+OS --> AC : OK
+AC --> MP : AjaxResult
+MP --> U : 展示已支付
+
+@enduml

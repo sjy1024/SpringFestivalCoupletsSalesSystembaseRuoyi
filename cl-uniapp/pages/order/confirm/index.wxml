@@ -1,0 +1,123 @@
+<!-- 订单确认页面 -->
+<view class="container">
+  <!-- 收货信息 -->
+  <view class="section">
+    <view class="section-title">收货信息</view>
+    
+    <!-- 有地址时显示地址卡片 -->
+    <view wx:if="{{hasAddress}}" class="address-card" bindtap="selectAddress">
+      <view class="address-info">
+        <view class="address-header">
+          <text class="receiver-name">{{form.receiverName}}</text>
+          <text class="receiver-phone">{{form.receiverPhone}}</text>
+        </view>
+        <view class="address-detail">
+          <text>{{form.receiverAddress}}</text>
+        </view>
+      </view>
+      <view class="address-arrow">
+        <text class="arrow">›</text>
+      </view>
+    </view>
+    
+    <!-- 没有地址时显示添加按钮 -->
+    <view wx:else class="add-address" bindtap="selectAddress">
+      <text class="add-icon">+</text>
+      <text class="add-text">添加收货地址</text>
+    </view>
+    
+    <!-- 手动输入地址（备用） -->
+    <view wx:if="{{!hasAddress}}" class="manual-input">
+      <view class="form-item">
+        <text class="label">收货人：</text>
+        <input 
+          value="{{form.receiverName}}" 
+          placeholder="请输入收货人" 
+          bindinput="onReceiverNameInput"
+          class="input" 
+        />
+      </view>
+      <view class="form-item">
+        <text class="label">联系电话：</text>
+        <input 
+          value="{{form.receiverPhone}}" 
+          placeholder="请输入联系电话" 
+          type="number" 
+          bindinput="onReceiverPhoneInput"
+          class="input" 
+        />
+      </view>
+      <view class="form-item">
+        <text class="label">收货地址：</text>
+        <textarea 
+          value="{{form.receiverAddress}}" 
+          placeholder="请输入收货地址" 
+          bindinput="onReceiverAddressInput"
+          class="textarea" 
+        />
+      </view>
+    </view>
+  </view>
+
+  <!-- 商品信息 -->
+  <view class="section">
+    <view class="section-title">商品信息</view>
+    
+    <!-- 单商品显示 -->
+    <view wx:if="{{type === 'single'}}" class="goods-item">
+      <image 
+        src="{{goods.coverImage}}" 
+        class="goods-image" 
+        mode="aspectFill"
+        binderror="onImageError"
+      ></image>
+      <view class="goods-info">
+        <text class="goods-name">{{goods.goodsName}}</text>
+        <text wx:if="{{specText}}" class="goods-spec">{{specText}}</text>
+        <text class="goods-price">¥{{goods.goodsPrice}} × {{quantity}}</text>
+      </view>
+    </view>
+    
+    <!-- 多商品显示 -->
+    <view wx:if="{{type === 'multi'}}">
+      <view 
+        wx:for="{{goodsList}}" 
+        wx:key="goodsId" 
+        class="goods-item"
+      >
+        <image 
+          src="{{item.coverImage}}" 
+          class="goods-image" 
+          mode="aspectFill"
+        ></image>
+        <view class="goods-info">
+          <text class="goods-name">{{item.goodsName}}</text>
+          <text wx:if="{{item.specText}}" class="goods-spec">{{item.specText}}</text>
+          <text class="goods-price">¥{{item.goodsPrice}} × {{item.quantity}}</text>
+        </view>
+        <view class="goods-subtotal">
+          <text class="subtotal">¥{{item.subtotal}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 订单金额 -->
+  <view class="section">
+    <view class="amount-item">
+      <text class="label">商品金额：</text>
+      <text class="value">¥{{totalAmount}}</text>
+    </view>
+    <view class="amount-item total">
+      <text class="label">订单总额：</text>
+      <text class="value">¥{{totalAmount}}</text>
+    </view>
+  </view>
+
+  <!-- 提交订单按钮 -->
+  <view class="footer">
+    <button bindtap="submitOrder" disabled="{{submitting}}" class="submit-btn">
+      {{submitting ? '提交中...' : '提交订单'}}
+    </button>
+  </view>
+</view>

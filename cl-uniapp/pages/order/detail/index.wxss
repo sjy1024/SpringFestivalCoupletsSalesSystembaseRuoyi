@@ -1,0 +1,420 @@
+.cancel-audit-banner {
+  margin: 0 20rpx 20rpx;
+  padding: 24rpx 28rpx;
+  background: #fff8e6;
+  border-radius: 16rpx;
+  border: 1rpx solid #ffe58f;
+}
+
+.cancel-audit-banner.reject {
+  background: #fff1f0;
+  border-color: #ffccc7;
+}
+
+.cancel-audit-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #d48806;
+}
+
+.cancel-audit-banner.reject .cancel-audit-title {
+  color: #cf1322;
+}
+
+.cancel-audit-desc {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #888;
+}
+
+.row-btns {
+  display: flex;
+  gap: 16rpx;
+}
+
+.flex-btn {
+  flex: 1;
+}
+
+.cancel-btn {
+  flex: 1;
+  background: #fff;
+  color: #c33c2f;
+  border: 2rpx solid #c33c2f;
+}
+
+.cancel-btn::after {
+  border: none;
+}
+
+.status-tip.pending {
+  background: #fff8e6;
+  color: #d48806;
+  border: 1rpx solid #ffe58f;
+}
+
+.pay-tip {
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.smart-custom-entry {
+  display: flex;
+  align-items: center;
+  margin: 0 20rpx 20rpx;
+  padding: 24rpx 28rpx;
+  background: #fffaf5;
+  border-radius: 16rpx;
+  border: 1rpx solid rgba(196, 30, 58, 0.25);
+  box-sizing: border-box;
+}
+
+.smart-custom-entry__text {
+  flex: 1;
+}
+
+.smart-custom-entry__title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.smart-custom-entry__desc {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: #888;
+}
+
+.smart-custom-arrow {
+  font-size: 40rpx;
+  color: #c33c2f;
+  line-height: 1;
+}
+
+/* 订单详情页面样式 - 春联主题（红色+白色+黄色） */
+
+.container {
+  background: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 180rpx;
+}
+
+/* 订单状态卡片 */
+.status-card {
+  background: #c33c2f;
+  padding: 40rpx 30rpx;
+  margin-bottom: 20rpx;
+  color: white;
+}
+
+.status-header {
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.status-text {
+  font-size: 40rpx;
+  font-weight: bold;
+  display: block;
+}
+
+/* 状态信息区域 */
+.status-info {
+  display: flex;
+  justify-content: space-around;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10rpx;
+  padding: 25rpx 20rpx;
+  margin-bottom: 25rpx;
+}
+
+.status-section {
+  flex: 1;
+  text-align: center;
+}
+
+.status-label {
+  font-size: 24rpx;
+  opacity: 0.9;
+  margin-bottom: 10rpx;
+}
+
+.status-value {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+/* 状态颜色 */
+.status-unpaid {
+  color: #ffd700;
+}
+
+.status-paid {
+  color: #fff;
+}
+
+.status-waiting {
+  color: #ffd700;
+}
+
+.status-pending {
+  color: #fff;
+}
+
+.status-processing {
+  color: #ffd700;
+}
+
+.status-completed {
+  color: #fff;
+}
+
+.status-canceled {
+  color: #ccc;
+}
+
+/* 订单信息行 */
+.order-info-row {
+  margin-top: 15rpx;
+}
+
+.order-no {
+  font-size: 26rpx;
+  opacity: 0.95;
+  display: block;
+}
+
+.order-time {
+  font-size: 24rpx;
+  opacity: 0.85;
+  display: block;
+  margin-top: 8rpx;
+}
+
+/* 通用section样式 */
+.section {
+  background: white;
+  border-radius: 12rpx;
+  padding: 30rpx;
+  margin: 0 20rpx 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(195, 60, 47, 0.08);
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #c33c2f;
+  margin-bottom: 25rpx;
+  padding-bottom: 15rpx;
+  border-bottom: 2rpx solid #ffd700;
+}
+
+/* 信息项 */
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.label {
+  font-size: 28rpx;
+  color: #666;
+  min-width: 140rpx;
+}
+
+.value {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+  text-align: right;
+  word-break: break-all;
+}
+
+/* 商品项 */
+.goods-item {
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.goods-item:last-child {
+  border-bottom: none;
+}
+
+.goods-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.goods-name {
+  font-size: 30rpx;
+  color: #333;
+  margin-bottom: 15rpx;
+  font-weight: 500;
+}
+
+.goods-spec {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 12rpx;
+}
+
+.goods-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.goods-price {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.goods-total {
+  font-size: 30rpx;
+  color: #c33c2f;
+  font-weight: bold;
+}
+
+.empty-goods {
+  text-align: center;
+  padding: 60rpx 0;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 金额项 */
+.amount-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 18rpx 0;
+  font-size: 28rpx;
+}
+
+.amount-item.highlight {
+  padding-top: 25rpx;
+  margin-top: 15rpx;
+  border-top: 2rpx solid #ffd700;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.amount-item .label {
+  color: #666;
+}
+
+.amount-item .value {
+  color: #333;
+}
+
+.amount-item.highlight .value.price {
+  color: #c33c2f;
+  font-size: 36rpx;
+}
+
+/* 备注文本 */
+.remark-text {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.8;
+  padding: 10rpx 0;
+}
+
+/* 底部操作栏 */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 20rpx;
+  border-top: 1rpx solid #eee;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.05);
+  z-index: 100;
+}
+
+.button-group {
+  margin-bottom: 15rpx;
+}
+
+.action-btn {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  margin-bottom: 15rpx;
+  padding: 0;
+  border: none;
+  font-weight: 500;
+  box-sizing: border-box;
+}
+
+.action-btn[disabled] {
+  opacity: 0.6;
+}
+
+.pay-btn {
+  background: #c33c2f;
+  color: white;
+}
+
+.pay-btn::after {
+  border: none;
+}
+
+.receive-btn {
+  background: #ffd700;
+  color: #333;
+}
+
+.receive-btn::after {
+  border: none;
+}
+
+.back-btn {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.back-btn::after {
+  border: none;
+}
+
+.pay-tip {
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  margin-top: -5rpx;
+  margin-bottom: 10rpx;
+}
+
+.status-tip {
+  text-align: center;
+  padding: 25rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  border-radius: 12rpx;
+  margin-bottom: 10rpx;
+}
+
+.status-tip.success {
+  background: #fff9e6;
+  color: #c33c2f;
+  border: 2rpx solid #ffd700;
+}
+
+.status-tip.cancel {
+  background: #f5f5f5;
+  color: #999;
+  border: 2rpx solid #e5e5e5;
+}

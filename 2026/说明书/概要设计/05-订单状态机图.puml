@@ -1,0 +1,41 @@
+@startuml
+title 图4-6 订单状态转换图（订单状态机图）
+
+skinparam shadowing false
+skinparam roundcorner 10
+skinparam ArrowThickness 1.2
+skinparam ArrowColor #34495e
+skinparam defaultFontColor #1a1a1a
+skinparam state {
+  BackgroundColor #eaf2f8
+  BorderColor #2874a6
+  FontColor #1a1a1a
+}
+
+' 与数据表 cl_order.status 一致：0待支付 1已支付 2制作中 3已完成 4已取消
+state "待支付 (0)" as s0
+state "已支付 (1)" as s1
+state "制作中 (2)" as s2
+state "已完成 (3)" as s3 #d5f5e3
+state "已取消 (4)" as s4 #fadbd8
+
+[*] --> s0
+
+s0 --> s1 : 支付成功\n（含模拟支付）
+s0 --> s4 : 超时未付 /\n用户取消
+
+s1 --> s2 : 商家接单\n（进入制作）
+s1 --> s4 : 异常退款
+
+s2 --> s3 : 用户确认收货
+s2 --> s4 : 异常终止 /\n管理端关闭
+
+s3 --> [*]
+s4 --> [*]
+
+note right of s0
+  小程序下单后默认进入；
+  支付前可取消或超时失效。
+end note
+
+@enduml

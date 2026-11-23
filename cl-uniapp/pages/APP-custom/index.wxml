@@ -1,0 +1,176 @@
+<!-- 定制页面 -->
+<view class="custom-page">
+  <view wx:if="{{error}}" class="error-message">
+    <text>{{error}}</text>
+  </view>
+
+  <view wx:if="{{boundOrderId}}" class="order-bind-banner">
+    <text class="order-bind-text">定制将关联订单 {{boundOrderNo || boundOrderId}}</text>
+    <text class="order-bind-clear" catch:tap="clearOrderBinding">解除</text>
+  </view>
+
+  <!-- AI 春联助手 -->
+  <view class="ai-hero" bind:tap="navigateToAIChat">
+    <view class="ai-hero-top">
+      <view class="ai-hero-title-wrap">
+        <text class="ai-hero-title">AI 春联助手</text>
+        <text class="ai-hero-badge">AI</text>
+      </view>
+      <view class="ai-status {{llmOnline ? 'online' : 'offline'}}">
+        <view class="ai-status-dot"></view>
+        <text>{{llmOnline ? 'DeepSeek 在线' : '离线模式'}}</text>
+      </view>
+    </view>
+    <text class="ai-hero-desc">对话生成上联 · 下联 · 横批，再回此页填写或微调</text>
+    <text class="ai-hero-tip">可先与 AI 聊出文案，再选尺寸、联纸后下单</text>
+    <view class="ai-hero-action">
+      <text>进入 AI 对话</text>
+      <text class="ai-hero-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 快捷主题：页内一键生成 -->
+  <view class="ai-theme-section">
+    <view class="ai-theme-label">热门主题 · 点选即生成</view>
+    <view class="ai-theme-list">
+      <view
+        wx:for="{{aiThemes}}"
+        wx:key="*this"
+        class="ai-theme-chip {{aiGenerating ? 'disabled' : ''}}"
+        catch:tap="onThemeGenerate"
+        data-theme="{{item}}"
+      >{{item}}</view>
+    </view>
+  </view>
+
+  <!-- 定制类型 -->
+  <view class="card-section custom-type-section">
+    <view class="section-title">定制类型</view>
+    <view class="type-options">
+      <view
+        wx:for="{{customTypes}}"
+        wx:key="id"
+        class="type-item {{selectedOptions.type === item.id ? 'active' : ''}}"
+        bind:tap="selectCustomType"
+        data-id="{{item.id}}"
+      >
+        <view class="type-image">
+          <image src="{{item.image}}" mode="aspectFill"></image>
+        </view>
+        <view class="type-name">{{item.name}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 尺寸 -->
+  <view class="card-section size-section">
+    <view class="section-title">尺寸选择</view>
+    <view class="size-options">
+      <view
+        wx:for="{{sizeOptions}}"
+        wx:key="id"
+        class="size-item {{selectedOptions.size === item.id ? 'active' : ''}}"
+        bind:tap="selectSize"
+        data-id="{{item.id}}"
+      >
+        <view class="size-name">{{item.name}}</view>
+        <view class="size-price">¥{{item.price}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 联纸 -->
+  <view class="card-section paper-section">
+    <view class="section-title">联纸选择</view>
+    <view class="paper-options">
+      <view
+        wx:for="{{paperOptions}}"
+        wx:key="id"
+        class="paper-item {{selectedOptions.paper === item.id ? 'active' : ''}}"
+        bind:tap="selectPaper"
+        data-id="{{item.id}}"
+      >
+        <view class="paper-color" style="background-color: {{item.color}}"></view>
+        <view class="paper-name">{{item.name}}</view>
+        <view class="paper-price">+¥{{item.price}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 文字内容 -->
+  <view class="card-section content-section">
+    <view class="content-section-head">
+      <view class="section-title section-title--inline">文字内容</view>
+      <view class="ai-text-shortcut {{aiGenerating ? 'loading' : ''}}" catch:tap="promptGenerateCouplet">
+        <text class="ai-text-shortcut-tag">AI</text>
+        <text class="ai-text-shortcut-text">{{aiGenerating ? '生成中…' : '生成春联'}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{selectedOptions.shanglian || selectedOptions.xialian || selectedOptions.hengpi}}" class="couplet-preview">
+      <view class="couplet-preview-title">当前文案预览</view>
+      <view class="couplet-preview-line hengpi-line">{{selectedOptions.hengpi || '—'}}</view>
+      <view class="couplet-preview-line">{{selectedOptions.shanglian || '—'}}</view>
+      <view class="couplet-preview-line">{{selectedOptions.xialian || '—'}}</view>
+    </view>
+
+    <view class="input-group">
+      <view class="input-item">
+        <view class="input-label">上联</view>
+        <textarea
+          class="input-textarea"
+          placeholder="请输入上联（建议 7–9 字）"
+          maxlength="20"
+          bind:input="inputShanglian"
+          value="{{selectedOptions.shanglian}}"
+        ></textarea>
+        <view class="input-hint">{{selectedOptions.shanglian.length}}/20</view>
+      </view>
+      <view class="input-item">
+        <view class="input-label">下联</view>
+        <textarea
+          class="input-textarea"
+          placeholder="请输入下联（建议 7–9 字）"
+          maxlength="20"
+          bind:input="inputXialian"
+          value="{{selectedOptions.xialian}}"
+        ></textarea>
+        <view class="input-hint">{{selectedOptions.xialian.length}}/20</view>
+      </view>
+      <view class="input-item">
+        <view class="input-label">横批</view>
+        <textarea
+          class="input-textarea"
+          placeholder="请输入横批（建议 4 字）"
+          maxlength="8"
+          bind:input="inputHengpi"
+          value="{{selectedOptions.hengpi}}"
+        ></textarea>
+        <view class="input-hint">{{selectedOptions.hengpi.length}}/8</view>
+      </view>
+      <view class="input-item">
+        <view class="input-label">备注 <text class="label-optional">选填</text></view>
+        <textarea
+          class="input-textarea input-textarea--short"
+          placeholder="特殊要求可在此说明"
+          maxlength="100"
+          bind:input="inputRemark"
+          value="{{selectedOptions.remark}}"
+        ></textarea>
+        <view class="input-hint">{{selectedOptions.remark.length}}/100</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部 -->
+  <view class="bottom-section">
+    <view class="price-info">
+      <view class="price-label">定制价格</view>
+      <view class="price-value">¥{{priceDisplay}}</view>
+    </view>
+    <view class="action-buttons">
+      <button class="action-btn reset-btn" bind:tap="resetForm" disabled="{{loading}}">重置</button>
+      <button class="action-btn pay-btn" bind:tap="payOrder" loading="{{loading}}">支付</button>
+    </view>
+  </view>
+</view>

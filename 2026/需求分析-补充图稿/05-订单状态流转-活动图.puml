@@ -1,0 +1,30 @@
+@startuml 订单状态流转活动图
+skinparam ActivityBackgroundColor #FFFEF5
+skinparam ActivityBorderColor #333333
+
+title 图 订单状态流转活动图（模块：订单模块，表3-6/表3-7）
+
+start
+:待支付 (0);
+
+if (支付成功?) then (是)
+  :已支付 (1);
+  if (是否定制订单?) then (是)
+    :制作中 (2);
+    :已完成 (3);
+  else (否)
+    :已完成 (3);
+  endif
+else (否)
+  :已取消 (4);
+endif
+
+stop
+
+note right
+  可在正文中说明：
+  超时未支付 -> 已取消；
+  取消订单时恢复库存。
+end note
+
+@enduml

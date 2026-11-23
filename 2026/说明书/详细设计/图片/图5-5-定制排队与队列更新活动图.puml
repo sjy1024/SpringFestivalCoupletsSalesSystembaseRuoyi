@@ -1,0 +1,29 @@
+@startuml
+title 图5-5 定制服务模块排队与队列位置更新活动图
+
+skinparam shadowing false
+skinparam ActivityBackgroundColor #eaf2f8
+skinparam ActivityBorderColor #2874a6
+
+start
+:用户提交定制请求\n(CS-01 或含定制的 OD-01);
+:开启数据库事务;
+:写入 cl_order（orderType=1）\n与 cl_order_item;
+:统计 cl_custom_order 中\nstatus ∈ {0,1} 的记录数;
+:queue_position = count + 1;
+:estimated_time = now + position × 平均时长;
+:生成 queue_no，写入 cl_custom_order;
+:提交事务;
+:返回 orderId、排队信息;
+
+partition "管理员完成一单 (status→2)" {
+  :开启事务;
+  :查询 queue_position 大于\n本单的待处理记录;
+  :逐条 queue_position 减 1;
+  :按新位置重算 estimated_time;
+  :提交事务;
+}
+
+stop
+
+@enduml

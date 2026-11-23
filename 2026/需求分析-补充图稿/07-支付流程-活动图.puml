@@ -1,0 +1,26 @@
+@startuml 支付流程活动图
+skinparam ActivityBackgroundColor #FFFEF5
+skinparam ActivityBorderColor #333333
+
+title 图 支付流程活动图（模块：支付模块，3.2.5 支付流程）
+
+start
+:用户确认订单并点击支付;
+:系统调用模拟支付接口;
+
+if (支付成功?) then (是)
+  :更新订单状态为 已支付;
+  :返回支付结果给用户;
+  :发送支付成功通知（模拟）;
+else (否)
+  :返回支付失败信息;
+endif
+
+stop
+
+note right
+  PAY-002: 支付结果查询可作为补充查询流程；
+  PAY-003: 超时处理由定时任务触发取消待支付订单。
+end note
+
+@enduml

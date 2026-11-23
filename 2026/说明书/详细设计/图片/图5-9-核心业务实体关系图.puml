@@ -1,0 +1,89 @@
+' 须 UTF-8 保存；渲染依赖 Graphviz（dot）
+@startdot
+digraph ER_Chen {
+  graph [
+    charset="UTF-8",
+    label="图5-9 春联售卖系统核心业务实体关系图（Chen 风格 E-R）",
+    labelloc=t,
+    fontsize=14,
+    bgcolor="#f5f6f8",
+    pad=0.4,
+    rankdir=LR,
+    splines=polyline,
+    nodesep=0.5,
+    ranksep=0.85,
+    dpi=150
+  ];
+  node [
+    fontsize=11,
+    fontcolor="#111111",
+    color="#2c3e50",
+    penwidth=1.0
+  ];
+  edge [
+    fontsize=9,
+    fontcolor="#333333",
+    color="#34495e"
+  ];
+
+  E_User  [label="终端用户\n(小程序设备)", shape=box, style="rounded,filled", fillcolor="#d6eaf8", penwidth=1.2];
+  E_Cart  [label="购物车\ncl_cart", shape=box, style="rounded,filled", fillcolor="#d6eaf8", penwidth=1.2];
+  E_Goods [label="商品\ncl_goods", shape=box, style="rounded,filled", fillcolor="#d6eaf8", penwidth=1.2];
+  E_Ext   [label="商品扩展\ncl_goods_extend", shape=box, style="rounded,filled", fillcolor="#d6eaf8", penwidth=1.2];
+  E_Order [label="订单\ncl_order", shape=box, style="rounded,filled", fillcolor="#d6eaf8", penwidth=1.2];
+  E_Item  [label="订单明细\ncl_order_item", shape=box, style="rounded,filled", fillcolor="#d6eaf8", penwidth=1.2];
+  E_Cust  [label="定制订单\ncl_custom_order", shape=box, style="rounded,filled", fillcolor="#d6eaf8", penwidth=1.2];
+
+  D_own [label="拥有", shape=diamond, style=filled, fillcolor="#fdebd0", color="#ca6f1e"];
+  D_sel [label="选购", shape=diamond, style=filled, fillcolor="#fdebd0", color="#ca6f1e"];
+  D_ord [label="下单", shape=diamond, style=filled, fillcolor="#fdebd0", color="#ca6f1e"];
+  D_inc [label="包含", shape=diamond, style=filled, fillcolor="#fdebd0", color="#ca6f1e"];
+  D_ref [label="引用", shape=diamond, style=filled, fillcolor="#fdebd0", color="#ca6f1e"];
+  D_ext [label="扩展", shape=diamond, style=filled, fillcolor="#fdebd0", color="#ca6f1e"];
+  D_cst [label="定制", shape=diamond, style=filled, fillcolor="#fdebd0", color="#ca6f1e"];
+
+  A_u1 [label="device_id", shape=ellipse, style=filled, fillcolor="#ebdef0", penwidth=0.7];
+  A_u2 [label="终端标识", shape=ellipse, style=filled, fillcolor="#ebdef0", penwidth=0.7];
+  A_c1 [label="数量", shape=ellipse, style=filled, fillcolor="#ebdef0", penwidth=0.7];
+  A_g1 [label="goods_id", shape=ellipse, style=filled, fillcolor="#ebdef0", penwidth=0.7];
+  A_g2 [label="名称 / 价格", shape=ellipse, style=filled, fillcolor="#ebdef0", penwidth=0.7];
+  A_g3 [label="库存 / 状态", shape=ellipse, style=filled, fillcolor="#ebdef0", penwidth=0.7];
+  A_e1 [label="材质 / 尺寸", shape=ellipse, style=filled, fillcolor="#ebdef0", penwidth=0.7];
+  A_o1 [label="订单号", shape=ellipse, style=filled, fillcolor="#ebdef0", penwidth=0.7];
+  A_o2 [label="金额 / 状态", shape=ellipse, style=filled, fillcolor="#ebdef0", penwidth=0.7];
+  A_i1 [label="购买数量", shape=ellipse, style=filled, fillcolor="#ebdef0", penwidth=0.7];
+  A_t1 [label="排队信息", shape=ellipse, style=filled, fillcolor="#ebdef0", penwidth=0.7];
+  A_t2 [label="定制内容", shape=ellipse, style=filled, fillcolor="#ebdef0", penwidth=0.7];
+
+  E_User  -> A_u1 [dir=none];
+  E_User  -> A_u2 [dir=none];
+  E_Cart  -> A_c1 [dir=none];
+  E_Goods -> A_g1 [dir=none];
+  E_Goods -> A_g2 [dir=none];
+  E_Goods -> A_g3 [dir=none];
+  E_Ext   -> A_e1 [dir=none];
+  E_Order -> A_o1 [dir=none];
+  E_Order -> A_o2 [dir=none];
+  E_Item  -> A_i1 [dir=none];
+  E_Cust  -> A_t1 [dir=none];
+  E_Cust  -> A_t2 [dir=none];
+
+  E_User  -> D_own [dir=none, taillabel="1", headlabel="n", labeldistance=2.2];
+  D_own   -> E_Cart [dir=none];
+  E_Cart  -> D_sel [dir=none, taillabel="n", headlabel="1", labeldistance=2.2];
+  D_sel   -> E_Goods [dir=none];
+
+  E_User  -> D_ord [dir=none, taillabel="1", headlabel="n", labeldistance=2.2];
+  D_ord   -> E_Order [dir=none];
+  E_Order -> D_inc [dir=none, taillabel="1", headlabel="n", labeldistance=2.2];
+  D_inc   -> E_Item [dir=none];
+  E_Item  -> D_ref [dir=none, taillabel="n", headlabel="1", labeldistance=2.2];
+  D_ref   -> E_Goods [dir=none];
+
+  E_Goods -> D_ext [dir=none, taillabel="1", headlabel="0..1", labeldistance=2.5];
+  D_ext   -> E_Ext [dir=none];
+
+  E_Order -> D_cst [dir=none, taillabel="1", headlabel="0..1", labeldistance=2.5];
+  D_cst   -> E_Cust [dir=none];
+}
+@enddot

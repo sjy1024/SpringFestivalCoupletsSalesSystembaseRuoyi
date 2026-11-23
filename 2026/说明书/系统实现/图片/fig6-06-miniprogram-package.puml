@@ -1,0 +1,29 @@
+@startuml
+title 图6-6 小程序分包结构图
+
+top to bottom direction
+skinparam shadowing false
+skinparam componentStyle rectangle
+
+[app.json] as APPJSON
+
+package "主包 pages" as MAIN {
+  [pages/home/home] as H
+  [pages/cart/index] as CART
+  [pages/usercenter/index] as UC
+  [pages/APP-custom/index] as CC
+  [pages/APP-ai-chat/index] as CHAT
+}
+
+package "分包 subpackages" as SUB {
+  [pages/goods/*] as G
+  [pages/order/*] as O
+  [pages/user/*] as U
+  [pages/coupon/*] as CO
+  [pages/promotion/*] as P
+}
+
+APPJSON --> MAIN
+APPJSON --> SUB
+
+@enduml

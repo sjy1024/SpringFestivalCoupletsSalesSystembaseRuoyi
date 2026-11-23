@@ -1,0 +1,86 @@
+<view class="page-container">
+  <view class="tab-bar">
+    <view class="tab-bar__placeholder" />
+    <t-tabs
+      t-class="tab-bar__inner"
+      t-class-active="tab-bar__active"
+      t-class-track="t-tabs-track"
+      bind:change="onTabChange"
+      value="{{status}}"
+      style="position: fixed; top: 0; left: 0; z-index: 100"
+    >
+      <t-tab-panel
+        wx:for="{{tabs}}"
+        wx:for-index="index"
+        wx:for-item="item"
+        wx:key="index"
+        label="{{item.text}}"
+        value="{{item.key}}"
+      />
+    </t-tabs>
+  </view>
+  <t-pull-down-refresh
+    id="pull-down-refresh"
+    normal-bar-height="{{200}}"
+    max-bar-height="{{272}}"
+    refreshTimeout="{{3000}}"
+    background="#f5f5f5"
+    use-loading-slot
+    loading-size="60rpx"
+    value="{{pullDownRefreshing}}"
+    bindrefresh="onPullDownRefresh_"
+    t-class-indicator="t-class-indicator"
+  >
+    <order-card
+      wx:for="{{orderList}}"
+      wx:key="id"
+      wx:for-item="order"
+      wx:for-index="oIndex"
+      order="{{order}}"
+      defaultShowNum="{{3}}"
+      data-order="{{order}}"
+      bindcardtap="onOrderCardTap"
+      useLogoSlot
+    >
+      <view slot="top-left" class="order-number">
+        <text decode>订单号&nbsp;</text>
+        {{order.orderNo}}
+      </view>
+      <specs-goods-card
+        wx:for="{{order.goodsList}}"
+        wx:key="id"
+        wx:for-item="goods"
+        wx:for-index="gIndex"
+        data="{{goods}}"
+        no-top-line="{{gIndex === 0}}"
+      />
+      <view slot="more">
+        <view class="price-total">
+          <text>总价</text>
+          <price fill priceUnit="yuan" price="{{order.totalAmount + ''}}" />
+          <text>，运费</text>
+          <price fill priceUnit="yuan" price="{{order.freightFee + ''}}" />
+          <text decode>&nbsp;</text>
+          <text class="bold-price" decode="{{true}}">实付&nbsp;</text>
+          <price fill priceUnit="yuan" class="real-pay" price="{{order.amount + ''}}" decimalSmaller />
+        </view>
+        <order-button-bar order="{{order}}" bindrefresh="onRefresh" data-order="{{order}}" />
+      </view>
+    </order-card>
+
+    <!-- 无订单空态 -->
+    <view wx:if="{{orderList.length === 0 && listLoading === 2}}" class="empty-wrapper">
+      <t-empty image="{{emptyImg}}" description="暂无订单" t-class="t-empty-text" />
+    </view>
+
+    <!-- 加载中 / 加载更多 / 失败重试 -->
+    <load-more
+      wx:if="{{orderList.length > 0 || listLoading === 1 || listLoading === 3}}"
+      list-is-empty="{{false}}"
+      status="{{listLoading}}"
+      bindretry="onReTryLoad"
+    />
+  </t-pull-down-refresh>
+</view>
+<t-toast id="t-toast" />
+<t-dialog id="t-dialog" />
